@@ -1,0 +1,26 @@
+SELECT TblProductPackSize.Group1_str, TblProductPackSize.Supplement_str, TblProductPackSize.Description_str, TblProductPackSize.ProductCode_str, TblProductPackSize.NSN_str, TblProductPackSize.ICN_str, TblProductPackSize.ECN_str, TblDemander.Code_str, 
+TblRequisition.Requisition_str, TblRequisition.Requisition_ID, TblRequisition.Ordered_dat, TblRequisition.OrderedBy_str, TblRequisition.AuthorizedBy_str, TblRequisition.Authorized_Dat, TblRequisition.VoucherNo_str, TblRequisition.Charges_mon, 
+TblRequisition.TotalCost_mon, TblRequisition.Received_dat, TblRequisition.ItemsNo_int, TblRequisition.Remarks_mem, TblRequisition.Activated_bol, TblRequisition.Activated_dat, TblRequisitionItems.QtyOrdered_int, TblRequisitionItems.QtyDemanderOnHand_int,
+TblRequisitionItems.QtyIssued_int,  (ISNULL(view_ProductQtyOnHand.TotalQtyOnHand_int,0)-ISNULL(view_ProductQtyOnHold.SumQtyOnHold_int,0)) AS prd_QtyOnHand,
+TblRequisitionItems.QtyAuthorized_int, TblRequisitionItems.BatchNumber_str, TblRequisitionItems.Expiry_Dat,
+TblRequisitionItems.PackCost_mon, TblRequisitionItems.ExtendedCost_mon, TblDemander.Name_str, TblDemander.Address1_str, TblDemander.Address2_str, TblDemander.Address3_str, TblDemander.City_str, TblRequisition.Issued_Dat, TblRequisition.IssuedBy_str, 
+TblRequisitionitems.PackCost_mon*TblRequisitionItems.QtyOrdered_int AS QtyReqExtCost, 
+ROUND(TblRequisitionItems.Cal_PackCost, 2), 
+ISNULL(TblRequisitionItems.VATUsed_dbl, 1) VATUsed_dbl,  
+ROUND(TblRequisitionItems.Cal_PackCost, 2) * ISNULL((TblRequisitionItems.VATUsed_dbl/100)+1, 1) AS SellingPricePack,
+(ROUND(TblRequisitionItems.Cal_PackCost, 2) * TblRequisitionItems.QtyIssued_int) AS CalQtyPricePack,
+(ROUND(TblRequisitionItems.Cal_PackCost, 2) *ISNULL((TblRequisitionItems.VATUsed_dbl/100)+1, 1) * TblRequisitionItems.QtyIssued_int) AS TotalQtySellingPrice, 
+((TblRequisitionItems.QtyIssued_int * (ROUND(TblRequisitionitems.Cal_PackCost, 2) * ((TblRequisitionItems.VATUsed_dbl/100)+1))) - (TblRequisitionItems.QtyIssued_int * ROUND(TblRequisitionitems.Cal_PackCost, 2))) AS VatOnEach,
+(TblRequisitionItems.QtyIssued_int * (ROUND(TblRequisitionitems.Cal_PackCost, 2) * ((TblRequisitionItems.VATUsed_dbl/100)))) AS TotalVatOnEach,
+
+TblDemander.Name_str AS DemName_str, tblDemander.Code_str AS DemCode_Str, (TblDemander.Name_str +' ['+ISNULL(tblDemander.Code_str, '') +']') AS DemDescrip_Str, tblDemander.Account_str AS DemAccount_str, 
+TblDemander.ShipAddress1_str AS DemAddress1_str, TblDemander.ShipAddress2_str AS DemAddress2_str,
+TblDemander.ShipAddress3_str AS DemCity_str, TblDemander.ShipPostalCode_str AS DemAddressCode_str, TblDemander.ShipLocation_str AS DemCountry,
+
+TblSystem.DemanderCode_str, TblSystem.DemanderName_str, TblSystem.Address1_str AS SysAddress1_str, TblSystem.Address2_str AS SysAddress2_str, TblSystem.Address3_str AS SysAddress3_str, 
+TblSystem.City_str AS SysCity_str, TblProductPackSize.Bin_str, TblProductPackSize.Group2_str, TblSystemAccounts.SystemCode_str, TblSystemAccounts.Account_str, TblSystemAccounts.AccountName_str, TblRequisition.ReceivedBy_str, TblDemander.Budget_mon, 
+TblDemander.BudgetBalance_mon, TblRequisitionitems.PackCost_mon*TblRequisitionItems.QtyIssued_int AS QtyIssdExtCost,  TblSystem.ProvincialLogo_img 
+FROM (TblSystem INNER JOIN TblSystemAccounts ON (TblSystemAccounts.SystemStore_ID = TblSystem.SystemStore_ID) AND (TblSystem.SystemStore_ID = TblSystemAccounts.SystemStore_ID)) INNER JOIN ((TblRequisitionItems INNER JOIN TblProductPackSize ON TblRequisitionItems.ProductCode_ID = TblProductPackSize.ProductCode_ID) INNER JOIN (TblDemander INNER JOIN TblRequisition ON TblDemander.Demander_ID = TblRequisition.Demander_ID) ON TblRequisitionItems.Requisition_ID = TblRequisition.Requisition_ID) ON TblSystemAccounts.SystemAccount_ID = TblRequisition.SystemStore_ID
+LEFT OUTER JOIN view_ProductQtyOnHand ON view_ProductQtyOnHand.ProductCode_ID = TblRequisitionItems.ProductCode_ID LEFT OUTER JOIN view_ProductQtyOnHold ON  view_ProductQtyOnHold.ProductCode_ID = TblRequisitionItems.ProductCode_ID
+WHERE (((TblRequisition.Requisition_ID)=:@RequisitionID) AND (((TblRequisitionItems.QtyIssued_int)<>0) OR ((TblRequisitionItems.QtyOrdered_int)<>0)) )
+ORDER BY TblProductPackSize.Bin_str, TblProductPackSize.GenericName_str, ((((((Tblproductpacksize.Strength_str)+' ')+Tblproductpacksize.Form_str)+'; ')+Tblproductpacksize.PackSize_str)+' ')+Tblproductpacksize.PackSizeUnit_str, TblProductPackSize.ProductCode_str;

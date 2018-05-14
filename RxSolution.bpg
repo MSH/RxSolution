@@ -1,0 +1,36 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = RxSolution.exe DispenserDLL.dll PrescriberDLL.dll PrintDLL.dll \
+  EvidenceDLL.dll Prescription.dll
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+RxSolution.exe: RxSolution.dpr
+  $(DCC)
+
+DispenserDLL.dll: DispenserDLL.dpr
+  $(DCC)
+
+PrescriberDLL.dll: PrescriberDLL.dpr
+  $(DCC)
+
+PrintDLL.dll: PrintDLL.dpr
+  $(DCC)
+
+EvidenceDLL.dll: EvidenceDLL.dpr
+  $(DCC)
+
+Prescription.dll: Prescription.dpr
+  $(DCC)
+
+
