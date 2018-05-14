@@ -1,0 +1,696 @@
+object DemanderLevelDM: TDemanderLevelDM
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Left = 834
+  Top = 189
+  Height = 475
+  Width = 385
+  object ADOProductLevelConnection: TADOConnection
+    CommandTimeout = 180
+    ConnectionString = 
+      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
+      'fo=False;Initial Catalog=RxNew;Data Source=sifisom'
+    LoginPrompt = False
+    Provider = 'SQLOLEDB.1'
+    Left = 72
+    Top = 16
+  end
+  object stpProductLeadTime: TADOStoredProc
+    Tag = 1
+    Connection = ADOProductLevelConnection
+    ProcedureName = 'strdprc_ProductLeadTime'
+    Parameters = <
+      item
+        Name = '@ProductID'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        Precision = 10
+        Value = 1
+      end
+      item
+        Name = '@DateA'
+        Attributes = [paNullable]
+        DataType = ftDateTime
+        Value = 0d
+      end
+      item
+        Name = '@DateB'
+        Attributes = [paNullable]
+        DataType = ftDateTime
+        Value = 0d
+      end>
+    Left = 64
+    Top = 152
+  end
+  object stpProductConsumption: TADOStoredProc
+    Tag = 1
+    Connection = ADOProductLevelConnection
+    ProcedureName = 'strdprc_ProductConsumptionPerDemander;1'
+    Parameters = <
+      item
+        Name = '@ProductID'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        Precision = 10
+        Value = 1
+      end
+      item
+        Name = '@DateA'
+        Attributes = [paNullable]
+        DataType = ftDateTime
+        Value = 0d
+      end
+      item
+        Name = '@DateB'
+        Attributes = [paNullable]
+        DataType = ftDateTime
+        Value = 0d
+      end
+      item
+        Name = '@TypeA'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 1
+        Value = 'A'
+      end
+      item
+        Name = '@TypeB'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 1
+        Value = 'A'
+      end
+      item
+        Name = '@DemanderID'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        Precision = 10
+        Value = 1
+      end>
+    Left = 64
+    Top = 208
+    object stpProductConsumptionDemander_ID: TIntegerField
+      FieldName = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+    end
+    object stpProductConsumptionProductCode_str: TWideStringField
+      FieldName = 'ProductCode_str'
+      Size = 14
+      DisplayLabel = 'ProductCode_str'
+      DisplayLabel = 'ProductCode_str'
+      DisplayLabel = 'ProductCode_str'
+      DisplayLabel = 'ProductCode_str'
+    end
+    object stpProductConsumptionDayQuantity_int: TFloatField
+      FieldName = 'DayQuantity_int'
+      ReadOnly = True
+      DisplayLabel = 'DayQuantity_int'
+      DisplayLabel = 'DayQuantity_int'
+      DisplayLabel = 'DayQuantity_int'
+      DisplayLabel = 'DayQuantity_int'
+    end
+    object stpProductConsumptionDayMinQOH_int: TIntegerField
+      FieldName = 'DayMinQOH_int'
+      ReadOnly = True
+      DisplayLabel = 'DayMinQOH_int'
+      DisplayLabel = 'DayMinQOH_int'
+      DisplayLabel = 'DayMinQOH_int'
+      DisplayLabel = 'DayMinQOH_int'
+    end
+    object stpProductConsumptionProductCode_ID: TIntegerField
+      FieldName = 'ProductCode_ID'
+      DisplayLabel = 'ProductCode_ID'
+      DisplayLabel = 'ProductCode_ID'
+      DisplayLabel = 'ProductCode_ID'
+      DisplayLabel = 'ProductCode_ID'
+    end
+    object stpProductConsumptionDate_dat: TDateTimeField
+      FieldName = 'Date_dat'
+      DisplayLabel = 'Date_dat'
+      DisplayLabel = 'Date_dat'
+      DisplayLabel = 'Date_dat'
+      DisplayLabel = 'Date_dat'
+    end
+    object stpProductConsumptionType_str: TStringField
+      FieldName = 'Type_str'
+      Size = 1
+      DisplayLabel = 'Type_str'
+      DisplayLabel = 'Type_str'
+      DisplayLabel = 'Type_str'
+      DisplayLabel = 'Type_str'
+    end
+    object stpProductConsumptionAccumDay_Int: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'AccumDay_Int'
+      Calculated = True
+      DisplayLabel = 'AccumDay_Int'
+      DisplayLabel = 'AccumDay_Int'
+      DisplayLabel = 'AccumDay_Int'
+      DisplayLabel = 'AccumDay_Int'
+    end
+    object stpProductConsumptionAccumDayQuantity_Int: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'AccumDayQuantity_Int'
+      Calculated = True
+      DisplayLabel = 'AccumDayQuantity_Int'
+      DisplayLabel = 'AccumDayQuantity_Int'
+      DisplayLabel = 'AccumDayQuantity_Int'
+      DisplayLabel = 'AccumDayQuantity_Int'
+    end
+  end
+  object qrySystemLeadtime: TADOQuery
+    Tag = 1
+    Connection = ADOProductLevelConnection
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT LeadTimeA_int FROM TblSystem')
+    Left = 56
+    Top = 280
+    object qrySystemLeadtimeLeadTimeA_int: TIntegerField
+      FieldName = 'LeadTimeA_int'
+      DisplayLabel = 'LeadTimeA_int'
+      DisplayLabel = 'LeadTimeA_int'
+      DisplayLabel = 'LeadTimeA_int'
+      DisplayLabel = 'LeadTimeA_int'
+    end
+  end
+  object qryDemander: TADOQuery
+    Connection = ADOProductLevelConnection
+    CursorType = ctStatic
+    Parameters = <
+      item
+        Name = 'DemanderID'
+        Attributes = [paSigned]
+        DataType = ftInteger
+        Precision = 10
+        Size = 4
+        Value = 1
+      end>
+    Prepared = True
+    SQL.Strings = (
+      'SELECT * FROM tblDemander'
+      'WHERE Demander_ID =:DemanderID')
+    Left = 56
+    Top = 344
+    object qryDemanderDemander_ID: TAutoIncField
+      FieldName = 'Demander_ID'
+      ReadOnly = True
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+    end
+    object qryDemanderCode_str: TWideStringField
+      FieldName = 'Code_str'
+      Size = 14
+      DisplayLabel = 'Code_str'
+      DisplayLabel = 'Code_str'
+      DisplayLabel = 'Code_str'
+      DisplayLabel = 'Code_str'
+    end
+    object qryDemanderName_str: TWideStringField
+      FieldName = 'Name_str'
+      Size = 50
+      DisplayLabel = 'Name_str'
+      DisplayLabel = 'Name_str'
+      DisplayLabel = 'Name_str'
+      DisplayLabel = 'Name_str'
+    end
+    object qryDemanderAddress1_str: TWideStringField
+      FieldName = 'Address1_str'
+      Size = 50
+      DisplayLabel = 'Address1_str'
+      DisplayLabel = 'Address1_str'
+      DisplayLabel = 'Address1_str'
+      DisplayLabel = 'Address1_str'
+    end
+    object qryDemanderAddress2_str: TWideStringField
+      FieldName = 'Address2_str'
+      Size = 50
+      DisplayLabel = 'Address2_str'
+      DisplayLabel = 'Address2_str'
+      DisplayLabel = 'Address2_str'
+      DisplayLabel = 'Address2_str'
+    end
+    object qryDemanderAddress3_str: TWideStringField
+      FieldName = 'Address3_str'
+      Size = 50
+      DisplayLabel = 'Address3_str'
+      DisplayLabel = 'Address3_str'
+      DisplayLabel = 'Address3_str'
+      DisplayLabel = 'Address3_str'
+    end
+    object qryDemanderCity_str: TWideStringField
+      FieldName = 'City_str'
+      Size = 50
+      DisplayLabel = 'City_str'
+      DisplayLabel = 'City_str'
+      DisplayLabel = 'City_str'
+      DisplayLabel = 'City_str'
+    end
+    object qryDemanderPostalCode_str: TWideStringField
+      FieldName = 'PostalCode_str'
+      DisplayLabel = 'PostalCode_str'
+      DisplayLabel = 'PostalCode_str'
+      DisplayLabel = 'PostalCode_str'
+      DisplayLabel = 'PostalCode_str'
+    end
+    object qryDemanderHealthDistrict_str: TWideStringField
+      FieldName = 'HealthDistrict_str'
+      Size = 50
+      DisplayLabel = 'HealthDistrict_str'
+      DisplayLabel = 'HealthDistrict_str'
+      DisplayLabel = 'HealthDistrict_str'
+      DisplayLabel = 'HealthDistrict_str'
+    end
+    object qryDemanderMagisterialDistrict: TWideStringField
+      FieldName = 'MagisterialDistrict'
+      Size = 50
+      DisplayLabel = 'MagisterialDistrict'
+      DisplayLabel = 'MagisterialDistrict'
+      DisplayLabel = 'MagisterialDistrict'
+      DisplayLabel = 'MagisterialDistrict'
+    end
+    object qryDemanderRegion_str: TWideStringField
+      FieldName = 'Region_str'
+      Size = 50
+      DisplayLabel = 'Region_str'
+      DisplayLabel = 'Region_str'
+      DisplayLabel = 'Region_str'
+      DisplayLabel = 'Region_str'
+    end
+    object qryDemanderType_str: TWideStringField
+      FieldName = 'Type_str'
+      Size = 50
+      DisplayLabel = 'Type_str'
+      DisplayLabel = 'Type_str'
+      DisplayLabel = 'Type_str'
+      DisplayLabel = 'Type_str'
+    end
+    object qryDemanderBeds_int: TIntegerField
+      FieldName = 'Beds_int'
+      DisplayLabel = 'Beds_int'
+      DisplayLabel = 'Beds_int'
+      DisplayLabel = 'Beds_int'
+      DisplayLabel = 'Beds_int'
+    end
+    object qryDemanderAuthority_str: TWideStringField
+      FieldName = 'Authority_str'
+      Size = 50
+      DisplayLabel = 'Authority_str'
+      DisplayLabel = 'Authority_str'
+      DisplayLabel = 'Authority_str'
+      DisplayLabel = 'Authority_str'
+    end
+    object qryDemanderContact1_str: TWideStringField
+      FieldName = 'Contact1_str'
+      Size = 50
+      DisplayLabel = 'Contact1_str'
+      DisplayLabel = 'Contact1_str'
+      DisplayLabel = 'Contact1_str'
+      DisplayLabel = 'Contact1_str'
+    end
+    object qryDemanderContact2_str: TWideStringField
+      FieldName = 'Contact2_str'
+      Size = 50
+      DisplayLabel = 'Contact2_str'
+      DisplayLabel = 'Contact2_str'
+      DisplayLabel = 'Contact2_str'
+      DisplayLabel = 'Contact2_str'
+    end
+    object qryDemanderPhone_str: TWideStringField
+      FieldName = 'Phone_str'
+      Size = 50
+      DisplayLabel = 'Phone_str'
+      DisplayLabel = 'Phone_str'
+      DisplayLabel = 'Phone_str'
+      DisplayLabel = 'Phone_str'
+    end
+    object qryDemanderFax_str: TWideStringField
+      FieldName = 'Fax_str'
+      DisplayLabel = 'Fax_str'
+      DisplayLabel = 'Fax_str'
+      DisplayLabel = 'Fax_str'
+      DisplayLabel = 'Fax_str'
+    end
+    object qryDemanderPopulation_int: TIntegerField
+      FieldName = 'Population_int'
+      DisplayLabel = 'Population_int'
+      DisplayLabel = 'Population_int'
+      DisplayLabel = 'Population_int'
+      DisplayLabel = 'Population_int'
+    end
+    object qryDemanderInPatients_int: TIntegerField
+      FieldName = 'InPatients_int'
+      DisplayLabel = 'InPatients_int'
+      DisplayLabel = 'InPatients_int'
+      DisplayLabel = 'InPatients_int'
+      DisplayLabel = 'InPatients_int'
+    end
+    object qryDemanderOutPatients_int: TIntegerField
+      FieldName = 'OutPatients_int'
+      DisplayLabel = 'OutPatients_int'
+      DisplayLabel = 'OutPatients_int'
+      DisplayLabel = 'OutPatients_int'
+      DisplayLabel = 'OutPatients_int'
+    end
+    object qryDemanderLevy_str: TWideStringField
+      FieldName = 'Levy_str'
+      Size = 1
+      DisplayLabel = 'Levy_str'
+      DisplayLabel = 'Levy_str'
+      DisplayLabel = 'Levy_str'
+      DisplayLabel = 'Levy_str'
+    end
+    object qryDemanderDeliveryRoute_str: TWideStringField
+      FieldName = 'DeliveryRoute_str'
+      Size = 50
+      DisplayLabel = 'DeliveryRoute_str'
+      DisplayLabel = 'DeliveryRoute_str'
+      DisplayLabel = 'DeliveryRoute_str'
+      DisplayLabel = 'DeliveryRoute_str'
+    end
+    object qryDemanderAccount_str: TWideStringField
+      FieldName = 'Account_str'
+      Size = 50
+      DisplayLabel = 'Account_str'
+      DisplayLabel = 'Account_str'
+      DisplayLabel = 'Account_str'
+      DisplayLabel = 'Account_str'
+    end
+    object qryDemanderActive_bol: TBooleanField
+      FieldName = 'Active_bol'
+      DisplayLabel = 'Active_bol'
+      DisplayLabel = 'Active_bol'
+      DisplayLabel = 'Active_bol'
+      DisplayLabel = 'Active_bol'
+    end
+    object qryDemanderBudget_mon: TBCDField
+      FieldName = 'Budget_mon'
+      Precision = 19
+      DisplayLabel = 'Budget_mon'
+      DisplayLabel = 'Budget_mon'
+      DisplayLabel = 'Budget_mon'
+      DisplayLabel = 'Budget_mon'
+    end
+    object qryDemanderBudgetBalance_mon: TBCDField
+      FieldName = 'BudgetBalance_mon'
+      Precision = 19
+      DisplayLabel = 'BudgetBalance_mon'
+      DisplayLabel = 'BudgetBalance_mon'
+      DisplayLabel = 'BudgetBalance_mon'
+      DisplayLabel = 'BudgetBalance_mon'
+    end
+    object qryDemanderItemsLevel_str: TWideStringField
+      FieldName = 'ItemsLevel_str'
+      Size = 50
+      DisplayLabel = 'ItemsLevel_str'
+      DisplayLabel = 'ItemsLevel_str'
+      DisplayLabel = 'ItemsLevel_str'
+      DisplayLabel = 'ItemsLevel_str'
+    end
+    object qryDemanderRemarks_mem: TMemoField
+      FieldName = 'Remarks_mem'
+      BlobType = ftMemo
+      DisplayLabel = 'Remarks_mem'
+      DisplayLabel = 'Remarks_mem'
+      DisplayLabel = 'Remarks_mem'
+      DisplayLabel = 'Remarks_mem'
+    end
+    object qryDemanderPostalAddress1_str: TWideStringField
+      FieldName = 'PostalAddress1_str'
+      Size = 100
+      DisplayLabel = 'PostalAddress1_str'
+      DisplayLabel = 'PostalAddress1_str'
+      DisplayLabel = 'PostalAddress1_str'
+      DisplayLabel = 'PostalAddress1_str'
+    end
+    object qryDemanderPostalAddress2_str: TWideStringField
+      FieldName = 'PostalAddress2_str'
+      Size = 100
+      DisplayLabel = 'PostalAddress2_str'
+      DisplayLabel = 'PostalAddress2_str'
+      DisplayLabel = 'PostalAddress2_str'
+      DisplayLabel = 'PostalAddress2_str'
+    end
+    object qryDemanderPostalAddress3_str: TWideStringField
+      FieldName = 'PostalAddress3_str'
+      Size = 100
+      DisplayLabel = 'PostalAddress3_str'
+      DisplayLabel = 'PostalAddress3_str'
+      DisplayLabel = 'PostalAddress3_str'
+      DisplayLabel = 'PostalAddress3_str'
+    end
+    object qryDemanderPostalLocation_str: TWideStringField
+      FieldName = 'PostalLocation_str'
+      Size = 100
+      DisplayLabel = 'PostalLocation_str'
+      DisplayLabel = 'PostalLocation_str'
+      DisplayLabel = 'PostalLocation_str'
+      DisplayLabel = 'PostalLocation_str'
+    end
+    object qryDemanderPostalPostalCode_str: TWideStringField
+      FieldName = 'PostalPostalCode_str'
+      Size = 50
+      DisplayLabel = 'PostalPostalCode_str'
+      DisplayLabel = 'PostalPostalCode_str'
+      DisplayLabel = 'PostalPostalCode_str'
+      DisplayLabel = 'PostalPostalCode_str'
+    end
+    object qryDemanderShipAddress1_str: TWideStringField
+      FieldName = 'ShipAddress1_str'
+      Size = 100
+      DisplayLabel = 'ShipAddress1_str'
+      DisplayLabel = 'ShipAddress1_str'
+      DisplayLabel = 'ShipAddress1_str'
+      DisplayLabel = 'ShipAddress1_str'
+    end
+    object qryDemanderShipAddress2_str: TWideStringField
+      FieldName = 'ShipAddress2_str'
+      Size = 100
+      DisplayLabel = 'ShipAddress2_str'
+      DisplayLabel = 'ShipAddress2_str'
+      DisplayLabel = 'ShipAddress2_str'
+      DisplayLabel = 'ShipAddress2_str'
+    end
+    object qryDemanderShipAddress3_str: TWideStringField
+      FieldName = 'ShipAddress3_str'
+      Size = 100
+      DisplayLabel = 'ShipAddress3_str'
+      DisplayLabel = 'ShipAddress3_str'
+      DisplayLabel = 'ShipAddress3_str'
+      DisplayLabel = 'ShipAddress3_str'
+    end
+    object qryDemanderShipLocation_str: TWideStringField
+      FieldName = 'ShipLocation_str'
+      Size = 100
+      DisplayLabel = 'ShipLocation_str'
+      DisplayLabel = 'ShipLocation_str'
+      DisplayLabel = 'ShipLocation_str'
+      DisplayLabel = 'ShipLocation_str'
+    end
+    object qryDemanderShipPostalCode_str: TWideStringField
+      FieldName = 'ShipPostalCode_str'
+      DisplayLabel = 'ShipPostalCode_str'
+      DisplayLabel = 'ShipPostalCode_str'
+      DisplayLabel = 'ShipPostalCode_str'
+      DisplayLabel = 'ShipPostalCode_str'
+    end
+    object qryDemanderOpenOrMaxDriven: TBooleanField
+      FieldName = 'OpenOrMaxDriven'
+      DisplayLabel = 'OpenOrMaxDriven'
+      DisplayLabel = 'OpenOrMaxDriven'
+      DisplayLabel = 'OpenOrMaxDriven'
+      DisplayLabel = 'OpenOrMaxDriven'
+    end
+    object qryDemanderLastUpdateBy_str: TWideStringField
+      FieldName = 'LastUpdateBy_str'
+      Size = 75
+      DisplayLabel = 'LastUpdateBy_str'
+      DisplayLabel = 'LastUpdateBy_str'
+      DisplayLabel = 'LastUpdateBy_str'
+      DisplayLabel = 'LastUpdateBy_str'
+    end
+    object qryDemanderLastUpdateBy_dbl: TIntegerField
+      FieldName = 'LastUpdateBy_dbl'
+      DisplayLabel = 'LastUpdateBy_dbl'
+      DisplayLabel = 'LastUpdateBy_dbl'
+      DisplayLabel = 'LastUpdateBy_dbl'
+      DisplayLabel = 'LastUpdateBy_dbl'
+    end
+    object qryDemanderProcurementPeriod_int: TIntegerField
+      FieldName = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+    end
+    object qryDemanderLeadTime_int: TIntegerField
+      FieldName = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+    end
+    object qryDemanderProvince_str: TWideStringField
+      FieldName = 'Province_str'
+      Size = 50
+      DisplayLabel = 'Province_str'
+      DisplayLabel = 'Province_str'
+      DisplayLabel = 'Province_str'
+      DisplayLabel = 'Province_str'
+    end
+    object qryDemandereMail_str: TWideStringField
+      FieldName = 'eMail_str'
+      Size = 50
+      DisplayLabel = 'eMail_str'
+      DisplayLabel = 'eMail_str'
+      DisplayLabel = 'eMail_str'
+      DisplayLabel = 'eMail_str'
+    end
+    object qryDemanderCanDispense_bol: TBooleanField
+      FieldName = 'CanDispense_bol'
+      DisplayLabel = 'CanDispense_bol'
+      DisplayLabel = 'CanDispense_bol'
+      DisplayLabel = 'CanDispense_bol'
+      DisplayLabel = 'CanDispense_bol'
+    end
+    object qryDemanderDemanderUnique_ID: TGuidField
+      FieldName = 'DemanderUnique_ID'
+      FixedChar = True
+      Size = 38
+      DisplayLabel = 'DemanderUnique_ID'
+      DisplayLabel = 'DemanderUnique_ID'
+      DisplayLabel = 'DemanderUnique_ID'
+      DisplayLabel = 'DemanderUnique_ID'
+    end
+  end
+  object stpProductList: TADOStoredProc
+    Connection = ADOProductLevelConnection
+    ProcedureName = 'strdprc_DemanderProductList;1'
+    Parameters = <
+      item
+        Name = '@DemanderID'
+        Attributes = [paNullable]
+        DataType = ftFloat
+        Precision = 15
+        Value = 1
+      end>
+    Left = 64
+    Top = 88
+    object stpProductListDemander_ID: TIntegerField
+      FieldName = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+      DisplayLabel = 'Demander_ID'
+    end
+    object stpProductListAvgConsumption_dbl: TFloatField
+      FieldName = 'AvgConsumption_dbl'
+      DisplayLabel = 'AvgConsumption_dbl'
+      DisplayLabel = 'AvgConsumption_dbl'
+      DisplayLabel = 'AvgConsumption_dbl'
+      DisplayLabel = 'AvgConsumption_dbl'
+    end
+    object stpProductListProcurementPeriod_int: TIntegerField
+      FieldName = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+      DisplayLabel = 'ProcurementPeriod_int'
+    end
+    object stpProductListLeadTime_int: TIntegerField
+      FieldName = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+      DisplayLabel = 'LeadTime_int'
+    end
+    object stpProductListMaxStockSet_int: TIntegerField
+      FieldName = 'MaxStockSet_int'
+      DisplayLabel = 'MaxStockSet_int'
+      DisplayLabel = 'MaxStockSet_int'
+      DisplayLabel = 'MaxStockSet_int'
+      DisplayLabel = 'MaxStockSet_int'
+    end
+    object stpProductListMinStockSet_int: TIntegerField
+      FieldName = 'MinStockSet_int'
+      DisplayLabel = 'MinStockSet_int'
+      DisplayLabel = 'MinStockSet_int'
+      DisplayLabel = 'MinStockSet_int'
+      DisplayLabel = 'MinStockSet_int'
+    end
+    object stpProductListQtyAuthorized_int: TIntegerField
+      FieldName = 'QtyAuthorized_int'
+      DisplayLabel = 'QtyAuthorized_int'
+      DisplayLabel = 'QtyAuthorized_int'
+      DisplayLabel = 'QtyAuthorized_int'
+      DisplayLabel = 'QtyAuthorized_int'
+    end
+    object stpProductListLeadTime_str: TWideStringField
+      FieldName = 'LeadTime_str'
+      Size = 1
+      DisplayLabel = 'LeadTime_str'
+      DisplayLabel = 'LeadTime_str'
+      DisplayLabel = 'LeadTime_str'
+      DisplayLabel = 'LeadTime_str'
+    end
+    object stpProductListProcurementPeriod_str: TWideStringField
+      FieldName = 'ProcurementPeriod_str'
+      Size = 1
+      DisplayLabel = 'ProcurementPeriod_str'
+      DisplayLabel = 'ProcurementPeriod_str'
+      DisplayLabel = 'ProcurementPeriod_str'
+      DisplayLabel = 'ProcurementPeriod_str'
+    end
+    object stpProductListDescription_str: TStringField
+      FieldName = 'Description_str'
+      Size = 250
+      DisplayLabel = 'Description_str'
+      DisplayLabel = 'Description_str'
+      DisplayLabel = 'Description_str'
+      DisplayLabel = 'Description_str'
+    end
+    object stpProductListProductCode_str: TWideStringField
+      FieldName = 'ProductCode_str'
+      Size = 14
+      DisplayLabel = 'ProductCode_str'
+      DisplayLabel = 'ProductCode_str'
+      DisplayLabel = 'ProductCode_str'
+      DisplayLabel = 'ProductCode_str'
+    end
+    object stpProductListDDDValue_int: TSmallintField
+      FieldName = 'DDDValue_int'
+      DisplayLabel = 'DDDValue_int'
+      DisplayLabel = 'DDDValue_int'
+      DisplayLabel = 'DDDValue_int'
+      DisplayLabel = 'DDDValue_int'
+    end
+    object stpProductListProductCode_ID: TAutoIncField
+      FieldName = 'ProductCode_ID'
+      ReadOnly = True
+      DisplayLabel = 'ProductCode_ID'
+      DisplayLabel = 'ProductCode_ID'
+      DisplayLabel = 'ProductCode_ID'
+      DisplayLabel = 'ProductCode_ID'
+    end
+    object stpProductListProductMin: TIntegerField
+      FieldName = 'ProductMin'
+      DisplayLabel = 'ProductMin'
+      DisplayLabel = 'ProductMin'
+      DisplayLabel = 'ProductMin'
+      DisplayLabel = 'ProductMin'
+    end
+    object stpProductListProductMax: TIntegerField
+      FieldName = 'ProductMax'
+      DisplayLabel = 'ProductMax'
+      DisplayLabel = 'ProductMax'
+      DisplayLabel = 'ProductMax'
+      DisplayLabel = 'ProductMax'
+    end
+  end
+end

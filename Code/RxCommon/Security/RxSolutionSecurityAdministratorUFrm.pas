@@ -1,0 +1,918 @@
+unit RxSolutionSecurityAdministratorUFrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, Mask, DBCtrls, Grids, DBGrids, ExtCtrls,
+  ImgList, DB, ADODB, DBActns, Menus, ComObj, dxExEdtr,
+  
+  ActnList, dxDBTLCl, dxGrClms, dxTL, dxDBCtrl, dxDBGrid, dxCntner,
+  RzBmpBtn, RzDlgBtn, dxPageControl,
+
+  RzButton, RzEdit, dmpDataObjectBaseModule,
+  RzPanel, RzCommon, RzLabel, RzBckgnd, ComCtrls, RzTreeVw, RzRadGrp,
+  RzDBRGrp, RzDBEdit, RzDBLbl, RzDBCmbo, ppVar, ppCtrls, ppPrnabl, ppClass,
+  ppBands, ppCache, ppDB, ppDBPipe, ppComm, ppRelatv, ppProd, ppReport,
+   ppModule, raCodMod, ppParameter, RzRadChk, RzDBChk, Math;
+
+const
+
+  HST_NAM = 'NAME';
+  HST_SUR = 'SURNAME';
+  HST_INI = 'INITIALS';
+  HST_TEL = 'TELEPHONE';
+  HST_CEL = 'CELL';
+  HST_EML = 'EMAIL';
+  HST_POS = 'POSITION';
+  HST_USR = 'USER NAME';
+  HST_DEM = 'DEMANDER';
+  HST_DIS = 'DISPENSER';
+  HST_PRE = 'PRESCRIBER';
+  HST_ACC = 'ACCESS RIGHTS';
+  HST_ACT = 'ACTIVE STATUS';
+  HST_PWD = 'PASSWORD';
+  HST_RNK = 'RANK';
+  HST_CLIN = 'CLINIC';
+  HST_LVL = 'ACCESS LEVEL';
+  HST_PIN = 'PIN CODE';
+
+type
+  TSecurity_AdministratorFrm = class(TForm)
+    Shape2: TShape;
+    Label4: TLabel;
+    ImageList1: TImageList;
+    PopupMenu1: TPopupMenu;
+    atnChangePermissions1: TMenuItem;
+    RzDialogButtons1: TRzDialogButtons;
+    pgcUsers: TdxPageControl;
+    dxTabSheet1: TdxTabSheet;
+    dxTabSheet2: TdxTabSheet;
+    dxTabSheet3: TdxTabSheet;
+    RzFrameController1: TRzFrameController;
+    Panel1: TPanel;
+    imgLogo: TImage;
+    img: TImage;
+    RzSeparator1: TRzSeparator;
+    RzSeparator2: TRzSeparator;
+    ConSecurity: TADOConnection;
+    qry_Users: TADOQuery;
+    dsqry_Users: TDataSource;
+    qry_UsersAccess: TADOQuery;
+    dsqry_UsersAccess: TDataSource;
+    qry_UserSessions: TADOQuery;
+    dsqry_UserSessions: TDataSource;
+    img32: TImageList;
+    img16: TImageList;
+    img24: TImageList;
+    pnlActivePrescribers: TPanel;
+    rzlPrescriberList: TRzLabel;
+    rzgPrescribers: TRzGroupBox;
+    grdUsers: TdxDBGrid;
+    RzDBLabel1: TRzDBLabel;
+    RzGroupBox1: TRzGroupBox;
+    grdUserAccess: TdxDBGrid;
+    grdUserAccessaccessDescription_str: TdxDBGridColumn;
+    grdUserAccessaccessLevel_int: TdxDBGridImageColumn;
+    RzDBLabel2: TRzDBLabel;
+    qrySystem_AccessAreas: TADOQuery;
+    RzGroupBox2: TRzGroupBox;
+    Image3: TImage;
+    lblUsername: TLabel;
+    RzDBEdit1: TRzDBEdit;
+    lblPassword: TLabel;
+    RzGroupBox3: TRzGroupBox;
+    Image1: TImage;
+    lblFirstName: TLabel;
+    RzDBEdit2: TRzDBEdit;
+    lblLastName: TLabel;
+    lblInitials: TLabel;
+    lblPosition: TLabel;
+    lblRank: TLabel;
+    RzGroupBox4: TRzGroupBox;
+    Image2: TImage;
+    Label1: TLabel;
+    lblCellPhone: TLabel;
+    lblEMail: TLabel;
+    RzSeparator4: TRzSeparator;
+    RzDBEdit3: TRzDBEdit;
+    RzDBEdit5: TRzDBEdit;
+    RzDBEdit6: TRzDBEdit;
+    RzDBEdit7: TRzDBEdit;
+    RzDBEdit8: TRzDBEdit;
+    RzDBEdit9: TRzDBEdit;
+    RzBitBtn1: TRzBitBtn;
+    ActionList1: TActionList;
+    atnUser_Add: TAction;
+    atnUser_ChangePassword: TAction;
+    atnUser_Delete: TAction;
+    atnUser_Synchronise: TAction;
+    RzBitBtn2: TRzBitBtn;
+    RzBitBtn3: TRzBitBtn;
+    RzBitBtn4: TRzBitBtn;
+    RzGroupBox5: TRzGroupBox;
+    grdUserSessions: TdxDBGrid;
+    grdUserSessionsLogOnTime_dat: TdxDBGridDateColumn;
+    grdUserSessionsMachineName_str: TdxDBGridColumn;
+    grdUserSessionsSecondsOnLine_int: TdxDBGridMaskColumn;
+    Panel2: TPanel;
+    RzSeparator3: TRzSeparator;
+    RzLabel1: TRzLabel;
+    RzLabel2: TRzLabel;
+    RzLabel3: TRzLabel;
+    RzLabel4: TRzLabel;
+    RzLabel5: TRzLabel;
+    Image9: TImage;
+    Image10: TImage;
+    Image11: TImage;
+    Image12: TImage;
+    Image13: TImage;
+    atnUser_Save: TAction;
+    grdUsersfirstName_str: TdxDBGridColumn;
+    grdUserslastName_str: TdxDBGridColumn;
+    RzBitBtn5: TRzBitBtn;
+    Label2: TLabel;
+    RzDBLookupComboBox1: TRzDBLookupComboBox;
+    qrySystem_DispenserList: TADOQuery;
+    dsqrySystem_DispenserList: TDataSource;
+    Timer1: TTimer;
+    RzBitBtn6: TRzBitBtn;
+    atnUser_RefreshLists: TAction;
+    atnCopyUserRights: TAction;
+    ppUserSessions_Report: TppReport;
+    qry_UserSessionsLogOnTime_dat: TDateTimeField;
+    qry_UserSessionsLogOffTime_dat: TDateTimeField;
+    qry_UserSessionsMachineName_str: TWideStringField;
+    qry_UserSessionsSecondsOnLine_int: TIntegerField;
+    qry_UserSessionsUserID: TGuidField;
+    qry_UserSessionssessionID: TGuidField;
+    atnPrintUserSessions: TAction;
+    PopupMenu2: TPopupMenu;
+    atnPrintUserSessions1: TMenuItem;
+    qryPrintUser_Sessions: TADOQuery;
+    ppDBPipeline1: TppDBPipeline;
+    dsPrintUserSessions: TDataSource;
+    qryPrintUser_Sessionsrank_str: TWideStringField;
+    qryPrintUser_Sessionsinitials_str: TWideStringField;
+    qryPrintUser_Sessionsfirstname_str: TWideStringField;
+    qryPrintUser_Sessionslastname_str: TWideStringField;
+    qryPrintUser_SessionsLogOnTime_dat: TDateTimeField;
+    qryPrintUser_SessionsLogOffTime_dat: TDateTimeField;
+    qryPrintUser_SessionsMachineName_str: TWideStringField;
+    qryPrintUser_SessionsSecondsOnLine_int: TIntegerField;
+    qryPrintUser_SessionsUserID: TGuidField;
+    qryPrintUser_SessionssessionID: TGuidField;
+    ppParameterList1: TppParameterList;
+    ppHeaderBand1: TppHeaderBand;
+    ppLabel1: TppLabel;
+    ppLabel2: TppLabel;
+    ppLabel3: TppLabel;
+    ppLabel4: TppLabel;
+    ppLabel5: TppLabel;
+    ppSystemVariable1: TppSystemVariable;
+    ppSystemVariable2: TppSystemVariable;
+    ppLine2: TppLine;
+    ppVariable1: TppVariable;
+    ppLine3: TppLine;
+    ppLabel7: TppLabel;
+    ppDetailBand1: TppDetailBand;
+    ppDBText1: TppDBText;
+    ppDBText2: TppDBText;
+    ppDBText3: TppDBText;
+    ppDBText5: TppDBText;
+    ppFooterBand1: TppFooterBand;
+    ppLine1: TppLine;
+    ppSystemVariable3: TppSystemVariable;
+    ppSystemVariable4: TppSystemVariable;
+    raCodeModule1: TraCodeModule;
+    ppLabel8: TppLabel;
+    ppLabel9: TppLabel;
+    ppVariable2: TppVariable;
+    ppVariable3: TppVariable;
+    ppSummaryBand1: TppSummaryBand;
+    ppDBCalc1: TppDBCalc;
+    ppLabel6: TppLabel;
+    ppLine4: TppLine;
+    Label3: TLabel;
+    Label5: TLabel;
+    qryDemanders: TADOQuery;
+    dsDemanders: TDataSource;
+    RzDBLookupComboBox2: TRzDBLookupComboBox;
+    RzDBLookupComboBox3: TRzDBLookupComboBox;
+    qryPositionPosts: TADOQuery;
+    dsPosts: TDataSource;
+    qry_IsInPerson: TADOQuery;
+    stp_ADDHelathWorker: TADOStoredProc;
+    stp_ADDHealthWorker: TADOStoredProc;
+    qryPositionPostspersonPositionPost_ID: TGuidField;
+    qryPositionPostspersonPositionPostDescription_str: TWideStringField;
+    qryPositionPostspersonPositionPostArea_str: TWideStringField;
+    qryPositionPostsnumberPrefix_str: TWideStringField;
+    qryPositionPostslastNumber_int: TIntegerField;
+    qryPositionPostsdefaultRxLevel_id: TGuidField;
+    qryPositionPostsdefaultRxLevel_str: TWideStringField;
+    Label6: TLabel;
+    RzDBLookupComboBox4: TRzDBLookupComboBox;
+    qrySystem_PrescriberList: TADOQuery;
+    dsPrescriberList: TDataSource;
+    qryOtherUsers: TADOQuery;
+    dsotherusers: TDataSource;
+    CopyRightsGroup: TGroupBox;
+    dxDBGrid1: TdxDBGrid;
+    dxDBGridColumn1: TdxDBGridColumn;
+    dxDBGridColumn2: TdxDBGridColumn;
+    Panel3: TPanel;
+    btnCancelCopy: TButton;
+    stp_CopyUSerRights: TADOStoredProc;
+    btncopyRights: TButton;
+    qryCheckUserTransactions: TADOQuery;
+    dsCheckUserTransactions: TDataSource;
+    qryCheckUserName: TADOQuery;
+    Label7: TLabel;
+    RzDBLookupComboBox5: TRzDBLookupComboBox;
+    tblClinics: TADOQuery;
+    dsClinics: TDataSource;
+    lblPin: TLabel;
+    edtPin: TRzDBEdit;
+    qryCheckUserPin: TADOQuery;
+    qryUseUserPin: TADOQuery;
+    qryUserEditHistory: TADOQuery;
+    dxTabSheet4: TdxTabSheet;
+    RzDBCheckBox1: TRzDBCheckBox;
+    dxDBGrid2: TdxDBGrid;
+    dsUserEditHistory: TDataSource;
+    dxDBGrid2Logged_dat: TdxDBGridDateColumn;
+    dxDBGrid2Type_str: TdxDBGridColumn;
+    dxDBGrid2Description_str: TdxDBGridColumn;
+    dxDBGrid2LoggedBy_str: TdxDBGridColumn;
+    dxDBGrid2Reason_str: TdxDBGridColumn;
+    grdUsersactive_bol: TdxDBGridCheckColumn;
+    qry_UsersAccessUserID: TGuidField;
+    qry_UsersAccessaccessException_bol: TBooleanField;
+    qry_UsersAccessaccessException_int: TIntegerField;
+    qry_UsersAccessaccessException_guid: TGuidField;
+    qry_UsersAccessaccessDescription_str: TWideStringField;
+    qry_UsersAccessaccessLevel_int: TIntegerField;
+    qry_UsersAccessdisplayOrder_int: TIntegerField;
+    qry_UsersAccessmoduleNum_int: TIntegerField;
+    qry_UsersAccessuserAccessID: TGuidField;
+    procedure qry_UsersCalcFields(DataSet: TDataSet);
+    procedure qry_UsersAccessNewRecord(DataSet: TDataSet);
+    procedure qry_UsersNewRecord(DataSet: TDataSet);
+    procedure atnUser_SynchroniseExecute(Sender: TObject);
+    procedure atnUser_ChangePasswordExecute(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure atnUser_AddExecute(Sender: TObject);
+    procedure qry_UsersAfterPost(DataSet: TDataSet);
+    procedure atnUser_DeleteExecute(Sender: TObject);
+    procedure atnUser_SaveExecute(Sender: TObject);
+    procedure atnUser_RefreshListsExecute(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure CopyRights;
+    procedure atnCopyUserRightsExecute(Sender: TObject);
+    procedure RzDBEdit1Change(Sender: TObject);
+    procedure atnPrintUserSessionsExecute(Sender: TObject);
+    procedure qry_UsersBeforePost(DataSet: TDataSet);
+    procedure qry_UsersAfterScroll(DataSet: TDataSet);
+    procedure btnCancelCopyClick(Sender: TObject);
+    procedure btncopyRightsClick(Sender: TObject);
+    procedure qry_UsersAccessBeforePost(DataSet: TDataSet);
+    
+  private
+    FSession: TSQLSession;
+    FUserID: Variant;
+    FUserLevel: Integer;
+    CurrentUserID : string;
+    procedure Refresh;
+    procedure SubmitCopyRightschanges;
+    function IsUserNameAvailable(username: string): Boolean;
+    function IsUserPinAvailable(userpin: string): Boolean;
+    function RequestUserPinBeforePost: Boolean;
+    procedure LogUserEditHistory(vType: string; vDescription: string; const vReason: string = '');
+    function BoolToString(b:Boolean):String;
+
+  public
+    procedure Open(const prmSession : TSQLSession ; var prmUserID : Variant ; const
+        prmUserLevel : integer);
+    procedure Synchronise_AccessModulesWithUser;
+
+    
+  end;
+
+  TSecurityAccessManager = class(TObject)
+  public
+    class procedure Administration(const prmSession : TSQLSession ; var prmUserID :
+        Variant ; const prmUserLevel : integer);
+  end;
+
+
+implementation
+
+uses RxSolutionSecurityChangePasswordUFrm, MainUDM, RxSolutionUFrm,
+  RxSolutionSecurityClass, frmPatientActiveReasonUFrm;
+
+
+{$R *.dfm}
+
+class procedure TSecurityAccessManager.Administration(const prmSession :
+    TSQLSession ; var prmUserID : Variant ; const prmUserLevel : integer);
+var
+  AdministrationForm: TSecurity_AdministratorFrm;
+
+begin
+
+  AdministrationForm := TSecurity_AdministratorFrm.Create(Nil);
+  try
+  with AdministrationForm do
+    try
+    Open(prmSession, prmUserID, prmUserLevel);
+    ShowModal;
+    except
+      on E:Exception do raise Exception.Create(e.Message);
+    end;
+  finally
+  AdministrationForm.Free
+  end;
+
+end;
+
+procedure TSecurity_AdministratorFrm.Open(const prmSession : TSQLSession ; var
+    prmUserID : Variant ; const prmUserLevel : integer);
+begin
+
+  FSession := prmSession;
+  ConSecurity.Close;
+  ConSecurity.ConnectionString := prmSession.ThisConnection.ConnectionString;
+  qrySystem_DispenserList.Open;
+  qrySystem_PrescriberList.Open;
+  qry_Users.Open;
+  qry_UsersAccess.Open;
+  qrySystem_AccessAreas.Open;
+  qry_UserSessions.Open;
+  qryDemanders.Open;
+  tblClinics.Open;
+  qryPositionPosts.Open;
+  qryOtherUsers.Open;
+
+  qryUserEditHistory.Open;
+
+  FUserLevel := prmUserLevel;
+
+end;
+
+procedure TSecurity_AdministratorFrm.qry_UsersCalcFields(
+  DataSet: TDataSet);
+begin
+
+  With DataSet do
+    begin
+    FieldByName('fullName_str').AsString :=
+      FieldByName('lastName_str').AsString + ', ' +
+      FieldByName('firstName_str').AsString;
+    end;
+
+
+end;
+
+procedure TSecurity_AdministratorFrm.Synchronise_AccessModulesWithUser;
+var
+  prvDisplayOrd: Integer;
+  prvModuleID: integer;
+  prvModuleName: string;
+
+  procedure CheckAgainstUserModule(const prmID : integer ; const prmDesc : string
+      ; const prmDisplay : integer);
+  var
+    prvFound: Boolean;
+  begin
+  with qry_UsersAccess do
+    if Active then
+      begin
+      prvFound := Locate('moduleNum_Int', prvModuleID, []);
+      if not prvFound then
+        begin
+        Append;
+        FieldByName('moduleNum_Int').AsInteger         := prvModuleID;
+        FieldByName('accessDescription_str').AsString := prvModuleName;
+        FieldByName('displayOrder_int').AsInteger     := prvDisplayOrd;
+        Post;
+        end;
+      end;
+  end;
+
+begin
+
+  with qrySystem_AccessAreas do
+    if Active then
+      begin
+      First;
+      while not EOF do
+        begin
+        prvModuleID := FieldByName('moduleNum_Int').AsInteger;
+        prvModuleName := FieldByName('accessAreaDescription_str').AsString;
+        prvDisplayOrd := FieldByName('displayOrder_int').AsInteger;
+        CheckAgainstUserModule(prvModuleID, prvModuleName, prvDisplayOrd);
+        Next;
+        end;
+      end;
+
+  with qry_UsersAccess do
+    if Active then
+      begin
+      Close;
+      Open;
+      end;
+end;
+
+procedure TSecurity_AdministratorFrm.qry_UsersAccessNewRecord(
+  DataSet: TDataSet);
+begin
+  if qry_Users.State in [dsInsert] then
+    begin
+    MessageDlg('Please save user detail before closing', mtInformation, [mbOK], 0);
+    Abort;
+    end;
+
+  With DataSet do
+    begin
+    FieldByName('userAccessID').AsString  := CreateClassID;
+    FieldByName('UserID').AsString  := qry_Users.FieldByName('UserID').AsString;
+    end;
+
+end;
+
+procedure TSecurity_AdministratorFrm.qry_UsersNewRecord(
+  DataSet: TDataSet);
+begin
+
+  with DataSet do
+    begin
+    FieldByName('UserID').AsString  := CreateClassID;
+    FieldByName('firstName_str').AsString  := '';
+    FieldByName('lastName_str').AsString  := '';
+    FieldByName('initials_str').AsString  := '';
+    FieldByName('position_str').AsString  := '';
+    FieldByName('rank_str').AsString  := '';
+    FieldByName('userName_str').AsString  := '';
+    FieldByName('password_str').AsString  := '';
+    FieldByName('telephone_str').AsString  := '';
+    FieldByName('cellular_str').AsString  := '';
+    FieldByName('email_str').AsString  := '';
+    FieldByName('office_str').AsString  := '';
+    FieldByName('building_str').AsString  := '';
+    FieldByName('prescriber_ID').AsString  := CreateClassID;
+    FieldByName('dispenser_ID').AsString  := CreateClassID;
+    FieldByName('passwordSet_dat').AsDateTime := Now();
+
+    CurrentUserID := FieldByName('UserID').AsString;    //
+    end;
+
+end;
+
+procedure TSecurity_AdministratorFrm.atnUser_SynchroniseExecute(
+  Sender: TObject);
+begin
+  Synchronise_AccessModulesWithUser;
+end;
+
+procedure TSecurity_AdministratorFrm.atnUser_ChangePasswordExecute(
+  Sender: TObject);
+begin
+  with qry_Users do
+    if Active then
+      if State in [dsEdit, dsInsert] then
+        Post;
+  FUserID := qry_Users.FieldByName('UserID').AsVariant;
+  TSecurityPasswordManager.ChangePassword(FSession, FUserID, FUserLevel, RxSolutionFrm.FPasswordLength);
+
+end;
+
+procedure TSecurity_AdministratorFrm.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+
+  with qry_Users do
+    if Active then
+      if State in [dsEdit, dsInsert] then
+        Post;
+
+  with qry_UsersAccess do
+    if Active then
+      if State in [dsEdit, dsInsert] then
+        Post;
+
+end;
+
+procedure TSecurity_AdministratorFrm.atnUser_AddExecute(Sender: TObject);
+begin
+  with qry_Users do
+    if Active then
+      Append;
+
+end;
+
+procedure TSecurity_AdministratorFrm.qry_UsersAfterPost(DataSet: TDataSet);
+begin
+
+  Synchronise_AccessModulesWithUser;
+
+end;
+
+procedure TSecurity_AdministratorFrm.atnUser_DeleteExecute(
+  Sender: TObject);
+begin
+  with qry_Users do
+    begin
+    if Active then
+      if MessageDlg('Delete selected user?', mtWarning, [mbYes, mbNo], 0) = mrYes then
+      begin
+       qryCheckUserTransactions.Close;
+	   qryCheckUserTransactions.Parameters.ParamByName('user').Value := FieldByName('lastName_str').AsString + ', ' + FieldByName('firstName_str').AsString;
+	   qryCheckUserTransactions.Open; 
+	      if qryCheckUserTransactions.RecordCount > 0 then
+	      begin
+	         MessageDlg('User cannot be deleted because they have transactions against them',mtWarning,[mbOK],0);
+                 Abort;
+	      end;
+           Delete;
+       end;
+    end;
+end;
+
+procedure TSecurity_AdministratorFrm.atnUser_SaveExecute(Sender: TObject);
+begin
+  with qry_Users do
+    if Active then
+      if State in [dsEdit, dsInsert] then
+        Post;
+
+end;
+
+procedure TSecurity_AdministratorFrm.Refresh;
+begin
+
+  qrySystem_DispenserList.Close;
+  qrySystem_DispenserList.Open;
+  qrySystem_PrescriberList.Close;
+  qrySystem_PrescriberList.Open;
+  qryDemanders.Close;
+  qryDemanders.Open;
+
+  tblClinics.Close;
+  tblClinics.Open;
+
+  qryPositionPosts.Close;
+  qryPositionPosts.Open;
+  
+  qryUserEditHistory.Close;
+  qryUserEditHistory.Open;
+
+end;
+
+procedure TSecurity_AdministratorFrm.atnUser_RefreshListsExecute(
+  Sender: TObject);
+begin
+  Refresh;
+end;
+
+procedure TSecurity_AdministratorFrm.FormShow(Sender: TObject);
+begin
+ pgcUsers.ActivePage := dxTabSheet1;
+ CopyRightsGroup.Align := alCustom;
+ CopyRightsGroup.Visible := False;
+
+ //user pin
+ edtPin.Visible := RequestUserPinBeforePost;
+ lblPin.Visible := edtPin.Visible;
+end;
+
+procedure TSecurity_AdministratorFrm.CopyRights;
+var
+ otheruserid : string;
+begin
+// CopyUserOtherRightsFrm.CopyUserRights(CurrentUserID);
+ CopyRightsGroup.Align := alClient;
+ CopyRightsGroup.Visible := True;
+
+end;
+
+procedure TSecurity_AdministratorFrm.atnCopyUserRightsExecute(
+  Sender: TObject);
+begin
+ CopyRights;
+end;
+
+procedure TSecurity_AdministratorFrm.RzDBEdit1Change(Sender: TObject);
+begin
+ atnCopyUserRights.Enabled := (RzDBEdit1.Text <> '');
+end;
+
+procedure TSecurity_AdministratorFrm.atnPrintUserSessionsExecute(
+  Sender: TObject);
+begin
+
+ with qryPrintUser_Sessions, ppUserSessions_Report do
+  begin
+  Open;     //open query
+  Print;    //print report
+  Close;    //close query
+  end;
+
+end;
+
+procedure TSecurity_AdministratorFrm.qry_UsersBeforePost(
+  DataSet: TDataSet);
+var
+ frmReason: TRXReason;
+ vReason: string;
+begin
+
+ frmReason := TRXReason.Create;
+
+ if (not IsUserNameAvailable(RzDBEdit1.Text)) then
+  begin
+  MessageDlg('User name is already in use. Please choose a different user name.', mtError, [mbOK], 1);
+  Abort;
+  end;
+
+ if (RequestUserPinBeforePost) then
+  if (not IsUserNameAvailable(edtPin.Text)) then
+  begin
+  MessageDlg('User Pin is already in use. Please choose a different User Pin.', mtError, [mbOK], 1);
+  Abort;
+  end;
+
+ with qry_Users do
+  begin
+  if VarIsNull(FieldByName('demander_id').AsInteger) or (FieldByName('demander_id').AsInteger < 1 ) then
+   FieldByName('demander_id').AsInteger         := 0;
+
+  if (not VarIsNull(FieldByName('password_str').OldValue)) then
+   begin
+   if (FieldByName('password_str').OldValue <> FieldByName('password_str').NewValue) then
+    begin
+    FieldByName('passwordSet_dat').AsDateTime := Now();
+    LogUserEditHistory(HST_PWD, 'PASSWORD RESET');
+    end;
+   end;
+
+  //15 August 2014 
+  //Log changes to Active Status
+  if (not VarIsNull(FieldByName('active_bol').OldValue)) then
+   if FieldByName('active_bol').OldValue <> FieldByName('active_bol').NewValue then
+    begin
+    vReason := frmReason.Show(FieldByName('active_bol').OldValue, 1);
+    LogUserEditHistory(HST_ACT, BoolToString(FieldByName('active_bol').OldValue) + ' TO ' +BoolToString(FieldByName('active_bol').NewValue), vReason);
+    end;
+  //Log changes to First Name
+  if (not VarIsNull(FieldByName('firstName_str').OldValue)) then
+   if FieldByName('firstName_str').OldValue <> FieldByName('firstName_str').NewValue then
+    LogUserEditHistory(HST_NAM, FieldByName('firstName_str').OldValue + ' TO ' +FieldByName('firstName_str').NewValue);
+  //Log changes to Surname
+  if (not VarIsNull(FieldByName('lastName_str').OldValue)) then
+   if FieldByName('lastName_str').OldValue <> FieldByName('lastName_str').NewValue then
+    LogUserEditHistory(HST_SUR, FieldByName('lastName_str').OldValue + ' TO ' +FieldByName('lastName_str').NewValue);
+  //Log changes to Initials
+  if (not VarIsNull(FieldByName('initials_str').OldValue)) then
+   if FieldByName('initials_str').OldValue <> FieldByName('initials_str').NewValue then
+    LogUserEditHistory(HST_INI, FieldByName('initials_str').OldValue + ' TO ' +FieldByName('initials_str').NewValue);
+  //Log changes to position
+  if (not VarIsNull(FieldByName('position_str').OldValue)) then
+   if FieldByName('position_str').OldValue <> FieldByName('position_str').NewValue then
+    LogUserEditHistory(HST_POS, FieldByName('position_str').OldValue + ' TO ' +FieldByName('position_str').NewValue);
+  //Log changes to person rank
+  if (not VarIsNull(FieldByName('rank_str').OldValue)) then
+   if FieldByName('rank_str').OldValue <> FieldByName('rank_str').NewValue then
+    LogUserEditHistory(HST_RNK, FieldByName('rank_str').OldValue + ' TO ' +FieldByName('rank_str').NewValue);
+  //Log changes to email
+  if (not VarIsNull(FieldByName('email_str').OldValue)) then
+   if FieldByName('email_str').OldValue <> FieldByName('email_str').NewValue then
+    LogUserEditHistory(HST_EML, FieldByName('email_str').OldValue + ' TO ' +FieldByName('email_str').NewValue);
+  //Log changes to person telephone
+  if (not VarIsNull(FieldByName('telephone_str').OldValue)) then
+   if FieldByName('telephone_str').OldValue <> FieldByName('telephone_str').NewValue then
+    LogUserEditHistory(HST_TEL, FieldByName('telephone_str').OldValue + ' TO ' +FieldByName('telephone_str').NewValue);
+  //Log changes to person cell phone number
+  if (not VarIsNull(FieldByName('cellular_str').OldValue)) then
+   if FieldByName('cellular_str').OldValue <> FieldByName('cellular_str').NewValue then
+    LogUserEditHistory(HST_CEL, FieldByName('cellular_str').OldValue + ' TO ' +FieldByName('cellular_str').NewValue);
+  //Log changes to user name
+  if (not VarIsNull(FieldByName('userName_str').OldValue)) then
+   if FieldByName('userName_str').OldValue <> FieldByName('userName_str').NewValue then
+    LogUserEditHistory(HST_USR, FieldByName('userName_str').OldValue + ' TO ' +FieldByName('userName_str').NewValue);
+  //Log changes to dispenser name
+  if (not VarIsNull(FieldByName('dispenser_ID').OldValue)) then
+   if FieldByName('dispenser_ID').OldValue <> FieldByName('dispenser_ID').NewValue then
+    LogUserEditHistory(HST_DIS, 'ASSIGNED AS: ' + qrySystem_DispenserList.FieldByName('personDescription_str').AsString);
+  //Log changes to prescriber name
+  if (not VarIsNull(FieldByName('prescriber_ID').OldValue)) then
+   if FieldByName('prescriber_ID').OldValue <> FieldByName('prescriber_ID').NewValue then
+    LogUserEditHistory(HST_PRE, 'ASSIGNED AS: ' + qrySystem_PrescriberList.FieldByName('personDescription_str').AsString);
+ //Log changes to demander name
+  if (not VarIsNull(FieldByName('Demander_ID').OldValue)) then
+   if FieldByName('Demander_ID').OldValue <> FieldByName('Demander_ID').NewValue then
+    LogUserEditHistory(HST_DEM, 'ASSIGNED TO: ' + qryDemanders.FieldByName('Name_str').AsString);
+  //Log changes to demander name
+  if (not VarIsNull(FieldByName('clinic_ID').OldValue)) then
+   if FieldByName('clinic_ID').OldValue <> FieldByName('clinic_ID').NewValue then
+    LogUserEditHistory(HST_CLIN, 'ASSIGNED TO: ' + tblClinics.FieldByName('ClinicName_str').AsString);
+
+  // If Dispenser Set To Null
+  if (not VarIsNull(FieldByName('dispenser_ID').OldValue)) then
+   if (VarIsNull(FieldByName('dispenser_ID').NewValue)) then
+    LogUserEditHistory(HST_DIS, 'ASSOCIATION REMOVED');
+  // If Prescriber Set To Null
+  if (not VarIsNull(FieldByName('prescriber_ID').OldValue)) then
+   if (VarIsNull(FieldByName('prescriber_ID').NewValue)) then
+    LogUserEditHistory(HST_PRE, 'ASSOCIATION REMOVED');
+  // If Demander Set To Null
+  if (not VarIsNull(FieldByName('Demander_ID').OldValue)) then
+   if (VarIsNull(FieldByName('Demander_ID').NewValue)) then
+    LogUserEditHistory(HST_DEM, 'ASSOCIATION REMOVED');
+   // If Clinic Set To Null
+  if (not VarIsNull(FieldByName('clinic_ID').OldValue)) then
+   if (VarIsNull(FieldByName('clinic_ID').NewValue)) then
+    LogUserEditHistory(HST_CLIN, 'ASSOCIATION REMOVED'); 
+   //Log PIN CODE
+  if (not VarIsNull(FieldByName('userPin_str').OldValue)) then
+   if FieldByName('userPin_str').OldValue <> FieldByName('userPin_str').NewValue then
+    LogUserEditHistory(HST_PIN, 'PIN Updated'); 
+  end;
+
+  frmReason.Free;
+
+end;
+
+procedure TSecurity_AdministratorFrm.qry_UsersAfterScroll(
+  DataSet: TDataSet);
+begin
+  with qry_Users do
+   begin
+   CurrentUserID := FieldByName('UserID').AsString;
+   end;
+end;
+
+procedure TSecurity_AdministratorFrm.SubmitCopyRightschanges;
+ var
+  vCopiedFrom: string;
+begin
+ //
+ try
+  with stp_CopyUSerRights do
+   begin
+   Parameters.ParamByName('@userid').Value       := qry_Users.FieldByName('userID').Value;
+   Parameters.ParamByName('@otheruserid').Value  := qryOtherUsers.FieldbyName('userID').Value;
+   ExecProc;
+   end;
+  with qryOtherUsers do
+   begin
+   vCopiedFrom := FieldbyName('LastName_str').AsString + ', ' + FieldbyName('FirstName_str').AsString;
+   end;
+
+   LogUserEditHistory(HST_ACC, 'COPIED FROM ' + vCopiedFrom);
+
+   qry_UsersAccess.Close;
+   qry_UsersAccess.Open;
+  except  
+  end;
+  
+end;
+
+
+procedure TSecurity_AdministratorFrm.btnCancelCopyClick(Sender: TObject);
+begin
+ CopyRightsGroup.Align   := alCustom;
+ CopyRightsGroup.Visible := False;
+end;
+
+procedure TSecurity_AdministratorFrm.btncopyRightsClick(Sender: TObject);
+begin
+
+ SubmitCopyRightschanges;
+ CopyRightsGroup.Align   := alCustom;
+ CopyRightsGroup.Visible := False;
+ MessageDlg('User rights copied successfully', mtInformation, [mbOk], 0);
+
+end;
+
+//********* SM 04 Feb 2013
+//********* This function return False if new user name is unique and False if a similar one exists
+function TSecurity_AdministratorFrm.IsUserNameAvailable(username: string): Boolean;
+begin
+
+ with qryCheckUserName do
+  begin
+  Parameters.ParamByName('user_ID').Value := qry_Users.FieldByName('userID').AsString;
+  Parameters.ParamByName('username').Value := username;
+  Open;
+  if RecordCount > 0 then
+   Result := False
+  else
+   Result := True;
+  Close;
+  end;
+
+end;
+
+//********* SM 01 July 2014
+//********* This function return True if new user name is unique and False if a similar one exists
+function TSecurity_AdministratorFrm.IsUserPinAvailable(userpin: string): Boolean;
+begin
+
+ with qryCheckUserPin do
+  begin
+  Parameters.ParamByName('user_ID').Value := qry_Users.FieldByName('userID').AsString;
+  Parameters.ParamByName('username').Value := userpin;
+  Open;
+  if RecordCount > 0 then
+   Result := False
+  else
+   Result := True;
+  Close;
+  end;
+
+end;
+
+function TSecurity_AdministratorFrm.RequestUserPinBeforePost: Boolean;
+begin
+
+ Result := False;
+ 
+ with qryUseUserPin do
+  begin
+  Close;
+  Open;
+
+  if RecordCount > 0 then
+   Result := FieldByName('requestPinBeforePost_bol').AsBoolean
+  else
+   Result := False;
+  end;
+
+end;
+
+procedure TSecurity_AdministratorFrm.LogUserEditHistory(vType: string; vDescription: string; const vReason: string='');
+var
+ vLogger, vUser: string;
+ vLoggerID, vUserID: Double;
+begin
+
+ with RxSolutionFrm.Security.User do
+  begin
+  vLogger := LastName.Value + ', ' + FirstName.Value;
+  vLoggerID := UserNumID.Value;
+  end;
+
+//
+ with qry_Users do
+  begin
+  vUser         := FieldByName('lastName_str').AsString + ', ' + FieldByName('firstName_str').AsString;
+  vUserID       := FieldByName('userNo_int').AsFloat;
+  end;
+
+ with qryUserEditHistory do
+  begin
+  Close;
+  Open;
+  Append;
+
+  FieldByName('Type_str').AsString              := vType;
+  FieldByName('Description_str').AsString       := vDescription;
+  FieldByName('LoggedBy_str').AsString          := vLogger;
+  FieldByName('User_str').AsString              := vUser;
+  FieldByName('LoggedBy_ID').AsFloat            := vLoggerID;
+  FieldByName('User_ID').AsFloat                := vUserID;
+  FieldByName('Reason_str').AsString            := vReason;
+
+  Post;
+  end;  
+
+end;
+
+function TSecurity_AdministratorFrm.BoolToString(b:Boolean):String;
+begin
+ if B then
+    Result := 'True'
+ else
+    Result := 'False';
+end;
+
+procedure TSecurity_AdministratorFrm.qry_UsersAccessBeforePost(
+  DataSet: TDataSet);
+begin
+
+ with qry_UsersAccess do
+  begin
+  //******** SM 27 Oct 2014
+  //******** Log Change to Access Level to Module
+  if (not VarIsNull(FieldByName('accessLevel_int').OldValue)) then
+   if FieldByName('accessLevel_int').OldValue <> FieldByName('accessLevel_int').NewValue then
+    LogUserEditHistory(HST_LVL, FieldByName('accessDescription_str').AsString + ': '+ IntToStr( FieldByName('accessLevel_int').OldValue )  + ' TO ' + IntToStr( FieldByName('accessLevel_int').NewValue));
+
+  end;
+
+end;
+
+end.
+
+

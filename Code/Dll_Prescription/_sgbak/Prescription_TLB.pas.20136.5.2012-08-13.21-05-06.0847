@@ -1,0 +1,136 @@
+unit Prescription_TLB;
+
+// ************************************************************************ //
+// WARNING                                                                    
+// -------                                                                    
+// The types declared in this file were generated from data read from a       
+// Type Library. If this type library is explicitly or indirectly (via        
+// another type library referring to this type library) re-imported, or the   
+// 'Refresh' command of the Type Library Editor activated while editing the   
+// Type Library, the contents of this file will be regenerated and all        
+// manual modifications will be lost.                                         
+// ************************************************************************ //
+
+// PASTLWTR : $Revision:   1.130.1.0.1.0.1.6  $
+// File generated on 14/05/2009 10:13:33 PM from Type Library described below.
+
+// ************************************************************************  //
+// Type Lib: C:\Lang 2\Code\Dll_Prescription\Prescription.tlb (1)
+// LIBID: {6BBB03C0-CF9C-4E35-8607-50F44176B339}
+// LCID: 0
+// Helpfile: 
+// DepndLst: 
+//   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\system32\stdvcl40.dll)
+// ************************************************************************ //
+{$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
+{$WARN SYMBOL_PLATFORM OFF}
+{$WRITEABLECONST ON}
+{$VARPROPSETTER ON}
+interface
+
+uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
+  
+
+// *********************************************************************//
+// GUIDS declared in the TypeLibrary. Following prefixes are used:        
+//   Type Libraries     : LIBID_xxxx                                      
+//   CoClasses          : CLASS_xxxx                                      
+//   DISPInterfaces     : DIID_xxxx                                       
+//   Non-DISP interfaces: IID_xxxx                                        
+// *********************************************************************//
+const
+  // TypeLibrary Major and minor versions
+  PrescriptionMajorVersion = 1;
+  PrescriptionMinorVersion = 2;
+
+  LIBID_Prescription: TGUID = '{6BBB03C0-CF9C-4E35-8607-50F44176B339}';
+
+  IID_IRX: TGUID = '{DD0EB150-EE5F-48E4-8EAF-BCB364C261F9}';
+  CLASS_RX: TGUID = '{57168452-EBF4-4C0F-8CE0-CD16B83C1EB0}';
+type
+
+// *********************************************************************//
+// Forward declaration of types defined in TypeLibrary                    
+// *********************************************************************//
+  IRX = interface;
+  IRXDisp = dispinterface;
+
+// *********************************************************************//
+// Declaration of CoClasses defined in Type Library                       
+// (NOTE: Here we map each CoClass to its Default Interface)              
+// *********************************************************************//
+  RX = IRX;
+
+
+// *********************************************************************//
+// Interface: IRX
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {DD0EB150-EE5F-48E4-8EAF-BCB364C261F9}
+// *********************************************************************//
+  IRX = interface(IDispatch)
+    ['{DD0EB150-EE5F-48E4-8EAF-BCB364C261F9}']
+    procedure Initialize(const _conString: WideString); safecall;
+    function Get_ConnectionString: WideString; safecall;
+    procedure Set_ConnectionString(const Value: WideString); safecall;
+    procedure Edit(const _id: WideString); safecall;
+    procedure Post(const _id: WideString); safecall;
+    procedure Revert(const _id: WideString); safecall;
+    procedure Delete(const _id: WideString); safecall;
+    procedure Add(const _patientId: WideString); safecall;
+    procedure Protocols; safecall;
+    procedure StandardDose; safecall;
+    function Get_DispenserID: WideString; safecall;
+    procedure Set_DispenserID(const Value: WideString); safecall;
+    procedure CopyRx(const _id: WideString); safecall;
+    property ConnectionString: WideString read Get_ConnectionString write Set_ConnectionString;
+    property DispenserID: WideString read Get_DispenserID write Set_DispenserID;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IRXDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {DD0EB150-EE5F-48E4-8EAF-BCB364C261F9}
+// *********************************************************************//
+  IRXDisp = dispinterface
+    ['{DD0EB150-EE5F-48E4-8EAF-BCB364C261F9}']
+    procedure Initialize(const _conString: WideString); dispid 1;
+    property ConnectionString: WideString dispid 2;
+    procedure Edit(const _id: WideString); dispid 3;
+    procedure Post(const _id: WideString); dispid 4;
+    procedure Revert(const _id: WideString); dispid 5;
+    procedure Delete(const _id: WideString); dispid 6;
+    procedure Add(const _patientId: WideString); dispid 7;
+    procedure Protocols; dispid 8;
+    procedure StandardDose; dispid 9;
+    property DispenserID: WideString dispid 10;
+    procedure CopyRx(const _id: WideString); dispid 11;
+  end;
+
+// *********************************************************************//
+// The Class CoRX provides a Create and CreateRemote method to          
+// create instances of the default interface IRX exposed by              
+// the CoClass RX. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoRX = class
+    class function Create: IRX;
+    class function CreateRemote(const MachineName: string): IRX;
+  end;
+
+implementation
+
+uses ComObj;
+
+class function CoRX.Create: IRX;
+begin
+  Result := CreateComObject(CLASS_RX) as IRX;
+end;
+
+class function CoRX.CreateRemote(const MachineName: string): IRX;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_RX) as IRX;
+end;
+
+end.

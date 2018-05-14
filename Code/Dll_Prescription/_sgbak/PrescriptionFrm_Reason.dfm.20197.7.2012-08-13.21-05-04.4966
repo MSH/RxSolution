@@ -1,0 +1,108 @@
+object frmRxReason: TfrmRxReason
+  Left = 589
+  Top = 381
+  Width = 510
+  Height = 175
+  Caption = 'Rx Reasons'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlRXBackground: TPanel
+    Left = 0
+    Top = 0
+    Width = 502
+    Height = 141
+    Align = alClient
+    BevelOuter = bvNone
+    Color = 16311512
+    TabOrder = 0
+    object pnlForm_Header: TPanel
+      Left = 29
+      Top = 8
+      Width = 441
+      Height = 81
+      Color = clWhite
+      TabOrder = 0
+      object lblDispenser: TLabel
+        Left = 14
+        Top = 4
+        Width = 123
+        Height = 32
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'Reason for Canceling:'
+        Color = 15448477
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object RzLine1: TRzLine
+        Left = 0
+        Top = 54
+        Width = 521
+        Height = 20
+        LineColor = 15448477
+        LineSlope = lsUp
+        LineStyle = psInsideFrame
+      end
+      object rxReason: TRzDBLookupComboBox
+        Left = 146
+        Top = 7
+        Width = 287
+        Height = 28
+        Ctl3D = False
+        DataField = 'RxCancelReasonsAfterPosting_str'
+        DataSource = FRM_RX
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -16
+        Font.Name = 'Arial Narrow'
+        Font.Style = [fsBold]
+        KeyField = 'Reason_Str'
+        ListField = 'Reason_Str'
+        ListSource = dsRxReasons
+        NullValueKey = 16449
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 0
+        FrameSides = [sdBottom]
+        FrameVisible = True
+      end
+    end
+    object rzdButtons: TRzDialogButtons
+      Left = 0
+      Top = 97
+      Width = 502
+      Height = 44
+      ButtonColor = 16311512
+      CaptionOk = 'Post'
+      CaptionCancel = 'Cancel'
+      CaptionHelp = 'Post & print'
+      ShowDivider = True
+      ShowGlyphs = True
+      Color = 16311512
+      TabOrder = 1
+    end
+  end
+  object FRM_RX: TDataSource
+    DataSet = dmRX.qryRX
+    Left = 74
+    Top = 40
+  end
+  object dsRxReasons: TDataSource
+    DataSet = dmRX.qryRxReasons
+    Left = 16
+    Top = 16
+  end
+end

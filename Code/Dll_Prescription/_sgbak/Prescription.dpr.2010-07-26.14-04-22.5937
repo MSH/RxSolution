@@ -1,0 +1,48 @@
+library Prescription;
+
+uses
+  ExceptionLog,
+  ComServ,
+  Prescription_TLB in 'Prescription_TLB.pas',
+  PrescriptionINTF in 'PrescriptionINTF.pas' {RX: CoClass},
+  PrescriptionDM in 'PrescriptionDM.pas' {dmRX: TDataModule},
+  PrescriptionFRM in 'PrescriptionFRM.pas' {frmRX},
+  PrescriptionUtilities in 'PrescriptionUtilities.pas',
+  PrescriptionFRM_DirectionCapture in 'PrescriptionFRM_DirectionCapture.pas' {frmRXItemDirectionsCapture},
+  PrescriptionFRM_InterventionCapture in 'PrescriptionFRM_InterventionCapture.pas' {frmRXIntervention},
+  PrescriptionClasses in 'PrescriptionClasses.pas',
+  StdRegimenUNT in '..\Dll_StandardRegimen\StdRegimenUNT.pas',
+  StdRegimen_ProtocolDetailFRM in '..\Dll_StandardRegimen\StdRegimen_ProtocolDetailFRM.pas' {frmProtocolDetail},
+  StdRegimen_ProtocolFRM in '..\Dll_StandardRegimen\StdRegimen_ProtocolFRM.pas' {frmProtocol},
+  StdRegimen_StdDoseDetailFRM in '..\Dll_StandardRegimen\StdRegimen_StdDoseDetailFRM.pas' {frmStdDoseDetail},
+  StdRegimen_StdDoseFRM in '..\Dll_StandardRegimen\StdRegimen_StdDoseFRM.pas' {frmStdDose},
+  StdRegimenDM in '..\Dll_StandardRegimen\StdRegimenDM.pas' {dmStdReg: TDataModule},
+  PrescriptionFRM_Posting in 'PrescriptionFRM_Posting.pas' {frmRXPosting},
+  rxDispensing_Dm_Patient in '..\RxDispensing\Patient\rxDispensing_Dm_Patient.pas' {dmPatient: TDataModule},
+  rxDispensing_Frm_Patient in '..\RxDispensing\Patient\rxDispensing_Frm_Patient.pas' {frmPatientDetail_},
+  Person_ in '..\RxCommon\General\Person_.pas',
+  SystemConstants in '..\RxDispensing\General\SystemConstants.pas',
+  RxSolutionSecurityLogOnUFrm in '..\RxCommon\Security\RxSolutionSecurityLogOnUFrm.pas' {Security_LogOnFrm},
+  RxSolutionSecurityChangePasswordUFrm in '..\RxCommon\Security\RxSolutionSecurityChangePasswordUFrm.pas' {Security_ChangePasswordFrm},
+  RxSolutionSecurityClass in '..\RxCommon\Security\RxSolutionSecurityClass.pas',
+  RxSolutionSecurityEncryption in '..\RxCommon\Security\RxSolutionSecurityEncryption.pas',
+  dmpDataObjectBaseModule in '..\RxCommon\Classes\dmpDataObjectBaseModule.pas',
+  SystemGeneralMethods in '..\RxDispensing\General\SystemGeneralMethods.pas',
+  rxDispensing_Unt_Patient in '..\RxDispensing\Patient\rxDispensing_Unt_Patient.pas',
+  DialogGridColumnSelectorUFrm in 'Common\DialogGridColumnSelectorUFrm.pas' {Dialog_GridColumnSelection},
+  RxSolutionSecurityAdministratorUFrm in '..\RxCommon\Security\RxSolutionSecurityAdministratorUFrm.pas' {Security_AdministratorFrm},
+  RxSolutionSecurityCopyUserRights in '..\RxCommon\Security\RxSolutionSecurityCopyUserRights.pas' {CopyUserRightsfrm},
+  RxSolutionUFrm in '..\RxCommon\Interface\RxSolutionUFrm.pas' {RxSolutionFrm};
+
+exports
+  DllGetClassObject,
+  DllCanUnloadNow,
+  DllRegisterServer,
+  DllUnregisterServer;
+
+{$R *.TLB}
+
+{$R *.RES}
+
+begin
+end.

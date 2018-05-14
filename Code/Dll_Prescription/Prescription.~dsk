@@ -1,0 +1,274 @@
+[Closed Files]
+File_0=SourceModule,'C:\Lang 2\Code\RxCommon\Security\RxSolutionSecurityClass.pas',0,1,89,82,108,0,0
+File_1=SourceModule,'C:\Lang 2\Code\Dll_Prescription\Prescription_TLB.pas',0,1,1,1,1,0,0
+File_2=TypeLibModule,'C:\Lang 2\Prescription.tlb',0,200,119,850,572,0
+File_3=SourceModule,'C:\Lang 2\Code\Dll_StandardRegimen\StdRegimenDM.pas',0,1,1498,46,1505,1,0
+File_4=SourceModule,'C:\Lang 2\Code\RxStore\Order\OrderDetailUFrm.pas',0,1,942,1,944,1,0
+File_5=SourceModule,'C:\Lang 2\Code\RxStore\Order\OrderUDM.pas',0,1,2529,42,2555,1,0
+File_6=SourceModule,'C:\Lang 2\Code\RxCommon\Interface\RxSolutionUFrm.pas',0,1,1718,66,1724,1,0
+File_7=SourceModule,'C:\Lang 2\Code\RxStore\Requisition\ProductBatchSelctUFrm.pas',0,1,60,98,66,0,0
+
+[Modules]
+Module0=C:\Lang 2\Code\Dll_Prescription\PrescriptionDM.pas
+Module1=C:\Lang 2\Code\RxDispensing\Patient\rxDispensing_Dm_Patient.pas
+Module2=C:\Lang 2\Code\Dll_Prescription\PrescriptionFRM.pas
+Module3=C:\Lang 2\Code\Dll_Prescription\PrescriptionFRM_Posting.pas
+Module4=C:\Lang 2\Code\Dll_Prescription\Prescription.dpr
+Count=5
+EditWindowCount=1
+TypeLibWindowCount=1
+
+[C:\Lang 2\Code\Dll_Prescription\PrescriptionDM.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[C:\Lang 2\Code\RxDispensing\Patient\rxDispensing_Dm_Patient.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=1
+
+[C:\Lang 2\Code\Dll_Prescription\PrescriptionFRM.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[C:\Lang 2\Code\Dll_Prescription\PrescriptionFRM_Posting.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Lang 2\Code\Dll_Prescription\Prescription.dpr]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Program Files\Borland\Delphi6\Projects\ProjectGroup1.bpg]
+FormState=0
+FormOnTop=0
+
+[C:\Lang 2\Code\Dll_Prescription\PrescriptionINTF.pas]
+FormState=0
+FormOnTop=0
+
+[C:\Lang 2\Code\Dll_Prescription\Prescription.tlb]
+FormState=0
+FormOnTop=0
+
+[EditWindow0]
+ViewCount=5
+CurrentView=4
+View0=0
+View1=1
+View2=2
+View3=3
+View4=4
+CodeExplorer=CodeExplorer@EditWindow0
+MessageView=MessageView@EditWindow0
+Create=1
+Visible=1
+State=0
+Left=250
+Top=197
+Width=1142
+Height=658
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=1134
+ClientHeight=624
+LeftPanelSize=0
+LeftPanelClients=CodeExplorer@EditWindow0
+LeftPanelData=00000400010000000C000000436F64654578706C6F726572000000000000000000000000000000000001000000000000000000000000FFFFFFFF
+RightPanelSize=0
+BottomPanelSize=0
+BottomPanelClients=MessageView@EditWindow0
+BottomPanelData=00000400010000000B0000004D657373616765566965770000000000000000000000000000000000FFFFFFFF
+
+[View0]
+Module=C:\Lang 2\Code\Dll_Prescription\Prescription.dpr
+CursorX=85
+CursorY=7
+TopLine=1
+LeftCol=1
+
+[View1]
+Module=C:\Lang 2\Code\Dll_Prescription\PrescriptionFRM.pas
+CursorX=68
+CursorY=370
+TopLine=346
+LeftCol=1
+
+[View2]
+Module=C:\Lang 2\Code\Dll_Prescription\PrescriptionFRM_Posting.pas
+CursorX=34
+CursorY=319
+TopLine=316
+LeftCol=1
+
+[View3]
+Module=C:\Lang 2\Code\RxDispensing\Patient\rxDispensing_Dm_Patient.pas
+CursorX=42
+CursorY=1492
+TopLine=1463
+LeftCol=1
+
+[View4]
+Module=C:\Lang 2\Code\Dll_Prescription\PrescriptionDM.pas
+CursorX=55
+CursorY=2974
+TopLine=2969
+LeftCol=1
+
+[TypeLibEditWindow0]
+Create=1
+Visible=0
+State=0
+Left=200
+Top=160
+Width=650
+Height=453
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=642
+ClientHeight=419
+Module=C:\Lang 2\Code\Dll_Prescription\Prescription.tlb
+
+[Watches]
+Count=0
+
+[Breakpoints]
+Count=0
+
+[AddressBreakpoints]
+Count=0
+
+[Main Window]
+Create=1
+Visible=1
+State=0
+Left=0
+Top=0
+Width=1680
+Height=143
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=1672
+ClientHeight=109
+
+[ProjectManager]
+Create=1
+Visible=0
+State=0
+Left=369
+Top=372
+Width=438
+Height=305
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=430
+ClientHeight=279
+TBDockHeight=305
+LRDockWidth=438
+Dockable=1
+
+[AlignmentPalette]
+Create=1
+Visible=0
+State=0
+Left=200
+Top=159
+Width=156
+Height=84
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=150
+ClientHeight=60
+
+[PropertyInspector]
+Create=1
+Visible=1
+State=0
+Left=3
+Top=139
+Width=224
+Height=847
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=216
+ClientHeight=821
+TBDockHeight=511
+LRDockWidth=190
+Dockable=1
+SplitPos=85
+ArrangeBy=Name
+SelectedItem=Name
+ExpandedItems=
+HiddenCategories=
+
+[ObjectTree]
+Create=1
+Visible=0
+State=0
+Left=0
+Top=157
+Width=190
+Height=342
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=182
+ClientHeight=316
+TBDockHeight=342
+LRDockWidth=190
+Dockable=1
+
+[DsmToolWindow]
+Create=1
+Visible=0
+State=0
+Left=373
+Top=252
+Width=334
+Height=515
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=326
+ClientHeight=489
+TBDockHeight=515
+LRDockWidth=334
+Dockable=1
+
+[CodeExplorer@EditWindow0]
+Create=1
+Visible=0
+State=0
+Left=0
+Top=12
+Width=140
+Height=553
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=140
+ClientHeight=553
+TBDockHeight=305
+LRDockWidth=140
+Dockable=1
+
+[MessageView@EditWindow0]
+Create=1
+Visible=0
+State=0
+Left=-6
+Top=-733
+Width=443
+Height=52
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=443
+ClientHeight=52
+TBDockHeight=52
+LRDockWidth=443
+Dockable=1
+
+[DockHosts]
+DockHostCount=0
+

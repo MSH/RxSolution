@@ -1,0 +1,956 @@
+unit PrescriptionFRM;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs,  ExtCtrls, DBCtrls, DB, Menus, ActnList, ImgList, StdCtrls, Mask,
+
+  PrescriptionUtilities,
+
+  cxStyles, cxCustomData, cxGraphics, cxFilter, cxData, cxEdit,
+  cxDBData, dxExEdtr, cxGridCardView, cxGridTableView, RzCommon, RzDlgBtn,
+  RzEdit, RzDBEdit, cxContainer, cxCheckBox, cxDBEdit, RzBckgnd, dxDBTLCl,
+  dxGrClms, dxDBGrid, dxDBCtrl, dxTL, dxCntner, cxGridLevel,
+  cxGridCustomTableView, cxGridDBCardView, cxClasses, cxControls,
+  cxGridCustomView, cxGrid, cxPC, ElPopBtn, RzDBCmbo, RzButton, RzRadChk,
+  RzDBChk, RzLine, RzLabel, RzDBLbl, RzTabs, Grids, DBGrids, ComCtrls,
+  RzDTP, RzDBDTP, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
+  wwdbdatetimepicker, RzBmpBtn;
+
+
+type
+  TfrmRX = class(TForm)
+    pnlBehindTab: TPanel;
+    pgcPrescription: TRzPageControl;
+    RzDialogButtons1: TRzDialogButtons;
+    tbsPatient: TRzTabSheet;
+    tbsRX: TRzTabSheet;
+    pnlRXBackground: TPanel;
+    pnlForm_Header: TPanel;
+    lblPatientLastName: TRzDBLabel;
+    lblPatientFolderNumber: TRzDBLabel;
+    lblRXNumber: TRzDBLabel;
+    lblDemander: TLabel;
+    lblPrescriber: TLabel;
+    lblDispenser: TLabel;
+    lblPrescriptionDetail: TLabel;
+    Label5: TLabel;
+    pnlForm_Header_Divider: TShape;
+    rxNaive: TRzDBCheckBox;
+    rxPregnant: TRzDBCheckBox;
+    rxClinic: TRzDBLookupComboBox;
+    rxDemander: TRzDBLookupComboBox;
+    rxPrescriberCode: TRzDBLookupComboBox;
+    rxDispenserCode: TRzDBLookupComboBox;
+    rxPrescriber: TRzDBLookupComboBox;
+    rxDispenser: TRzDBLookupComboBox;
+    rxReferred: TRzDBCheckBox;
+    pnlForm_Footer: TPanel;
+    lblCost: TRzDBLabel;
+    pnlForm_Footer_Divider: TShape;
+    pnlForm_Detail: TPanel;
+    pnlToolbar: TPanel;
+    btnLast: TElSpeedButton;
+    btnFirst: TElSpeedButton;
+    btnAdd: TElSpeedButton;
+    shpToolber: TShape;
+    btnRefresh: TElSpeedButton;
+    btnPrior: TElSpeedButton;
+    btnNext: TElSpeedButton;
+    btnEdit: TElSpeedButton;
+    btnDelete: TElSpeedButton;
+    Panel8: TPanel;
+    Panel10: TPanel;
+    Panel11: TPanel;
+    cxpRXItem: TcxPageControl;
+    cxpRXItem_tsLabels: TcxTabSheet;
+    cxgLabels: TcxGrid;
+    cxgLabelsCv: TcxGridDBCardView;
+    cxgLabelsCvlabel_Line01_str: TcxGridDBCardViewRow;
+    cxgLabelsCvlabel_Line02_str: TcxGridDBCardViewRow;
+    cxgLabelsCvlabel_Line03_str: TcxGridDBCardViewRow;
+    cxgLabelsCvlabel_Line04_str: TcxGridDBCardViewRow;
+    cxgLabelsCvlabel_Line05_str: TcxGridDBCardViewRow;
+    cxgLabelsCvlabel_Line06_str: TcxGridDBCardViewRow;
+    cxgLabelsTVLvl: TcxGridLevel;
+    cxpRXItem_tsPrescribing: TcxTabSheet;
+    cxpRXItem_tsDispensing: TcxTabSheet;
+    cxpRXItem_tsCmbStandard: TcxTabSheet;
+    cxpRXItem_tsCmbDetailed: TcxTabSheet;
+    cxpRXItem_tsCmbStandardWithLabel: TcxTabSheet;
+    dxgRXItemStandard: TdxDBGrid;
+    dxgRXItemStandardFrmSKU_Dbl: TdxDBGridMaskColumn;
+    dxgRXItemStandardFrmDuration_Dbl: TdxDBGridMaskColumn;
+    dxgRXItemStandardFrmRepeat_Dbl: TdxDBGridMaskColumn;
+    dxgRXItemStandardDspSKUActual_Dbl: TdxDBGridMaskColumn;
+    dxgRXItemStandardDspProductBreakPack_Bol: TdxDBGridCheckColumn;
+    lblView_Standard: TLabel;
+    lblView_Labels: TLabel;
+    lblView_Dispensing: TLabel;
+    lblView_Detailed: TLabel;
+    lblView_StandardWithLabel: TLabel;
+    dxgRXItemStandardFrmFormulation_Str: TdxDBGridPickColumn;
+    dxgRXItemStandardFrmInterval_Str: TdxDBGridPickColumn;
+    dxgRXItemStandardFrmDirections_Str: TdxDBGridPickColumn;
+    dxgRXItemStandardDspProduct_Str: TdxDBGridPickColumn;
+    dxgRXItemStandardFrmSKUTotal_Dbl: TdxDBGridMaskColumn;
+    pnlForm_DetailInformation: TPanel;
+    lblItemCount: TRzLabel;
+    rxItemCount: TDBText;
+    btnView: TElSpeedButton;
+    btnSave: TElSpeedButton;
+    btnCancel: TElSpeedButton;
+    dxgRXItemStandardFrmAdministrationUnit_Str: TdxDBGridColumn;
+    dxgRXItemStandardDspProductCalc_Dbl: TdxDBGridColumn;
+    dxgRXItemStandardDspNotDispensed_Bol: TdxDBGridCheckColumn;
+    RzLabel2: TRzLabel;
+    regRegimin: TRzDBLabel;
+    lblProductCost: TLabel;
+    regProductCost: TRzDBLabel;
+    regItemCost: TRzDBLabel;
+    lne_01: TRzLine;
+    RzSeparator1: TRzSeparator;
+    GroupBox1: TGroupBox;
+    regLabel_01: TRzDBLabel;
+    regLabel_02: TRzDBLabel;
+    regLabel_03: TRzDBLabel;
+    regLabel_04: TRzDBLabel;
+    regLabel_05: TRzDBLabel;
+    regLabel_06: TRzDBLabel;
+    regPackCount: TRzDBLabel;
+    lbl_multiples: TLabel;
+    lbl_Equals: TLabel;
+    lblProductPacks: TLabel;
+    lblFinalCost: TLabel;
+    lblBatchNumber: TLabel;
+    regBatchNumber: TRzDBEdit;
+    lblICD: TLabel;
+    lblIntervention: TLabel;
+    regInterventionProblem: TRzDBLookupComboBox;
+    regInterventionOutcome: TRzDBLookupComboBox;
+    lblRxRepeatStatus: TDBText;
+    lblPosted: TDBText;
+    regICDCode: TRzDBLookupComboBox;
+    regICDDesc: TRzDBLookupComboBox;
+    dxgRXItemStandardFrmAdmin2_str: TdxDBGridColumn;
+    lblProblem: TLabel;
+    RzDBDateTimePicker1: TRzDBDateTimePicker;
+    dxgRXItemStandardInputOrder_int: TdxDBGridColumn;
+    rxLocation: TRzDBLookupComboBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    dteNextVisit: TwwDBDateTimePicker;
+    RzBmpButton1: TRzBmpButton;
+    DBText1: TDBText;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormCreate(Sender: TObject);
+    procedure pnlRXBackgroundResize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure actGridView_StandardExecute(Sender: TObject);
+    procedure actGridView_LabelsExecute(Sender: TObject);
+    procedure actRXItem_ChangeDirectionsExecute(Sender: TObject);
+    procedure actRXItem_ChangeInterventionExecute(Sender: TObject);
+    procedure actData_FirstExecute(Sender: TObject);
+    procedure actData_PriorExecute(Sender: TObject);
+    procedure actData_NextExecute(Sender: TObject);
+    procedure actData_LastExecute(Sender: TObject);
+    procedure actData_AddExecute(Sender: TObject);
+    procedure actData_DeleteExecute(Sender: TObject);
+    procedure actData_PostExecute(Sender: TObject);
+    procedure actData_CancelExecute(Sender: TObject);
+    procedure actData_RefreshExecute(Sender: TObject);
+    procedure tmrRXTimer(Sender: TObject);
+    procedure actRX_PrintExecute(Sender: TObject);
+    procedure actRX_PrintLabelsExecute(Sender: TObject);
+    procedure actRX_PrintAddressLabelExecute(Sender: TObject);
+    procedure actRX_ProtocolAddExecute(Sender: TObject);
+    procedure actRX_StandardRegimenExecute(Sender: TObject);
+    procedure actRX_PostExecute(Sender: TObject);
+    procedure actRX_PostAndCancelExecute(Sender: TObject);
+    procedure actRX_PostAndCancelCollectionExecute(Sender: TObject);
+    procedure pgcPrescriptionChange(Sender: TObject);
+    procedure actRX_PostAndPrintAllExecute(Sender: TObject);
+    procedure actRX_PostAndPrintLabelExecute(Sender: TObject);
+    procedure actRX_PostPrintLabelAndTrailerLabelExecute(Sender: TObject);
+    procedure actRX_PrintTrailerLabelExecute(Sender: TObject);
+    procedure actRX_PrintAllergiesExecute(Sender: TObject);
+  private
+    FEnableDispenser: Boolean;
+    procedure SetScreenFocus(_screenNo: Integer);
+    procedure LoadPatientPages;
+    procedure NotImplementetedInThisVersion;
+    procedure SetButtons(_type: Integer = _EDIT_NORMAL);
+    procedure SetScreenAvailablity(_type: Integer = _EDIT_NORMAL);
+  public
+    property EnableDispenser: Boolean read FEnableDispenser write FEnableDispenser;
+  end;
+
+var
+  frmRx : TfrmRX;
+
+implementation
+
+uses PrescriptionDM, PrescriptionFRM_DirectionCapture,
+  PrescriptionFRM_InterventionCapture, StdRegimenUNT;
+
+
+
+{$R *.dfm}
+
+procedure TfrmRX.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  if ModalResult <> mrOK then
+    if MessageDlg('Cancel and exit?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      CanClose := True
+      else
+      CanClose := False;
+end;
+
+procedure TfrmRX.LoadPatientPages;
+begin
+
+
+  // Loads Patient data form
+{  dmPatient                     := TdmPatient.Create(nil);
+  dmPatient.Database            := dmRX.DatabaseConString;
+  dmPatient.Security            := Security;
+  dmPatient.Patient             := dmRX.PatientId;
+
+  frmPatientDetail_             := TfrmPatientDetail_.Create(tbsPatient);
+  frmPatientDetail_.Parent      := tbsPatient;
+  frmPatientDetail_.Align       := alClient;
+  frmPatientDetail_.BorderStyle := bsNone;
+  frmPatientDetail_.Visible     := True;
+ }
+
+end;
+
+procedure TfrmRX.NotImplementetedInThisVersion;
+begin
+  raise Exception.Create('Not implemented in this version.');
+end;
+
+procedure TfrmRX.FormCreate(Sender: TObject);
+begin
+
+  cxpRXItem_tsCmbStandard.TabVisible := False;
+  cxpRXItem_tsLabels.TabVisible := False;
+  cxpRXItem_tsPrescribing.TabVisible := False;
+  cxpRXItem_tsDispensing.TabVisible := False;
+  cxpRXItem_tsCmbDetailed.TabVisible := False;
+  cxpRXItem_tsCmbStandardWithLabel.TabVisible := False;
+
+  pgcPrescription.ActivePage := tbsRX;
+
+  LoadPatientPages;
+
+
+end;
+
+procedure TfrmRX.pnlRXBackgroundResize(Sender: TObject);
+const
+  FFrameWidth = 5;
+
+var
+  wid : integer;
+  hgt : integer;
+  halfForm : integer;
+begin
+
+
+  wid := (Sender as TPanel).Width;
+  hgt := (Sender as TPanel).Height;
+
+  halfForm := pnlForm_Header.Width div 2;
+  pnlForm_Header.Left := (wid div 2) - halfForm;
+  pnlForm_Header.Top := FFrameWidth;
+
+  pnlForm_Footer.Left := (wid div 2) - halfForm;
+  pnlForm_Footer.Top := hgt - pnlForm_Footer.Height - FFrameWidth ;
+
+  pnlForm_Detail.Left   := (wid div 2) - halfForm;
+  pnlForm_Detail.Top    := pnlForm_Header.Top + pnlForm_Header.Height + 1;
+  pnlForm_Detail.Height := (pnlForm_Footer.Top - pnlForm_Detail.Top) -1 ;
+
+  if not (dmRX.qryRX.FieldByName('dispensingPosted_bol').AsBoolean) then
+   dteNextVisit.MinDate := Now();
+
+end;
+
+procedure TfrmRX.FormShow(Sender: TObject);
+begin
+
+//  dxgRXItemPrescribingOnlyFrmFormulation_Str.Items.Assign(dmRX.ListOfFormulation);
+//  dxgRXItemPrescribingOnlyFrmInterval_Str.Items.Assign(dmRX.ListOfInterval);
+//  dxgRXItemPrescribingOnlyFrmDirections_Str.Items.Assign(dmRX.ListOfDirections);
+//  dxgRXItemPrescribingOnlyFrmICDCode_Str.Items.Assign(dmRX.ListOfICD);
+
+  pgcPrescription.ActivePage := tbsRX;
+  dxgRXItemStandardFrmFormulation_Str.Items.Assign(dmRX.ListOfFormulation);
+  dxgRXItemStandardFrmInterval_Str.Items.Assign(dmRX.ListOfInterval);
+  dxgRXItemStandardFrmDirections_Str.Items.Assign(dmRX.ListOfDirections);
+  SetScreenFocus(0);
+
+end;
+
+procedure TfrmRX.actGridView_StandardExecute(Sender: TObject);
+begin
+
+  SetScreenFocus(0);
+
+end;
+
+procedure TfrmRX.actGridView_LabelsExecute(Sender: TObject);
+begin
+
+  SetScreenFocus(1);
+
+end;
+
+procedure TfrmRX.actRXItem_ChangeDirectionsExecute(Sender: TObject);
+
+begin
+  SetScreenFocus(2);
+
+
+end;
+
+procedure TfrmRX.SetScreenFocus(_screenNo: Integer);
+begin
+
+  case _screenNo of
+    0 :
+      begin
+      cxgLabelsCv.DataController.DataSource := nil;
+      dxgRXItemStandard.DataSource := FRM_RXItem;
+      dmRX.ListOfProducts := dxgRXItemStandardDspProduct_Str.Items;
+      dmRX.ForceProductListUpdate;
+      cxpRXItem.ActivePage := cxpRXItem_tsCmbStandard;
+      dxgRXItemStandard.SetFocus;
+      end;
+    1 :
+      begin
+      cxgLabelsCv.DataController.DataSource := FRM_RXItem;
+      cxpRXItem.ActivePage := cxpRXItem_tsLabels;
+      dxgRXItemStandard.DataSource := nil;
+      end;
+    2 : TDirections.Edit;
+    3 : TIntervention.Edit;
+    end;
+
+end;
+
+procedure TfrmRX.actRXItem_ChangeInterventionExecute(Sender: TObject);
+begin
+  SetScreenFocus(3);
+end;
+
+procedure TfrmRX.actData_FirstExecute(Sender: TObject);
+begin
+
+  try
+  if not dmRX.qryRXItem.Bof then dmRX.qryRXItem.First;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.actData_PriorExecute(Sender: TObject);
+begin
+  try
+  if not dmRX.qryRXItem.Bof then dmRX.qryRXItem.Prior;
+  except
+  end;
+end;
+
+procedure TfrmRX.actData_NextExecute(Sender: TObject);
+begin
+
+  try
+  if not dmRX.qryRXItem.Eof then dmRX.qryRXItem.Next;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.actData_LastExecute(Sender: TObject);
+begin
+
+  try
+  if not dmRX.qryRXItem.Eof then dmRX.qryRXItem.Last;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.actData_AddExecute(Sender: TObject);
+begin
+
+  try
+  dmRX.qryRXItem.Append;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.actData_DeleteExecute(Sender: TObject);
+begin
+
+  try
+  if MessageDlg('Delete currently selected item?', mtWarning, [mbYes, mbNo, mbCancel],0) = mrYes
+    then dmRX.qryRXItem.Delete;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.actData_PostExecute(Sender: TObject);
+begin
+
+  try
+  dmRX.qryRXItem.Post;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.actData_CancelExecute(Sender: TObject);
+begin
+
+  try
+  dmRX.qryRXItem.Cancel;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.actData_RefreshExecute(Sender: TObject);
+begin
+
+  try
+  dmRX.qryRXItem.Refresh;
+  except
+  end;
+
+end;
+
+procedure TfrmRX.tmrRXTimer(Sender: TObject);
+begin
+
+
+
+  if Lowercase(lblPosted.Caption) = Lowercase(STATUSDESC_POSTALL) then
+    begin
+    lblPosted.Font.Color := clRed;
+    lblPosted.Font.Size := 18;
+    end else if Lowercase(lblPosted.Caption) = Lowercase(STATUSDESC_STATUS) then
+    begin
+    lblPosted.Font.Color := clBlue;
+    lblPosted.Font.Size := 18;
+    end else
+    begin
+    lblPosted.Font.Color := clGray;
+    lblPosted.Font.Size := 18;
+    DBText1.Font.Size := 15;
+    DBText1.Font.Color := clGray;
+    DBText1.Visible := True;
+    end;
+
+
+  with lblRxRepeatStatus do
+    if LowerCase(Caption) = Lowercase('FINAL REPEAT') then
+      begin
+      Font.Color := clRed;
+      Font.Size := 22;
+      end
+      else
+      begin
+      Font.Color := clGray;
+      Font.Size := 18;
+      end;
+
+  SetButtons(dmRX.CurrentEditStatus);
+  SetScreenAvailablity(dmRX.CurrentEditStatus);
+
+end;
+
+procedure TfrmRX.actRX_PrintExecute(Sender: TObject);
+begin
+  dmRX.Print;
+end;
+
+procedure TfrmRX.actRX_PrintLabelsExecute(Sender: TObject);
+begin
+  dmRX.PrintLabels;
+end;
+
+procedure TfrmRX.actRX_PrintAddressLabelExecute(Sender: TObject);
+begin
+  dmRX.PrintAddress;
+end;
+
+procedure TfrmRX.SetButtons(_type: Integer = _EDIT_NORMAL);
+begin
+
+  if dmRX.qryRXItem.Active then
+    begin
+    if dmRX.qryRXItem.Eof then actData_Last.Enabled := False else actData_Last.Enabled := True;
+    if dmRX.qryRXItem.Eof then actData_Next.Enabled := False else actData_Next.Enabled := True;
+    if dmRX.qryRXItem.Bof then actData_First.Enabled := False else actData_First.Enabled := True;
+    if dmRX.qryRXItem.Bof then actData_Prior.Enabled := False else actData_Prior.Enabled := True;
+    if not (dmRX.qryRXItem.State in [dsEdit, dsInsert]) then actData_Post.Enabled := False else actData_Post.Enabled := True;
+    if not (dmRX.qryRXItem.State in [dsEdit, dsInsert]) then actData_Cancel.Enabled := False else actData_Cancel.Enabled := True;
+    actData_Refresh.Enabled := True;
+
+    case _type of
+      _EDIT_NORMAL: // normal new RX
+        begin
+        if dmRX.qryRXItem.RecordCount < 1 then actData_Delete.Enabled := False else actData_Delete.Enabled := True;
+        actData_Add.Enabled := True;
+        end;
+      _EDIT_REPEAT: // normal new RX
+        begin
+        actData_Delete.Enabled := False;
+        actData_Add.Enabled := False;
+        end;
+      _EDIT_POSTEDCOLLECTED: // normal new RX
+        begin
+        actData_Delete.Enabled := False;
+        actData_Add.Enabled := False;
+        end;
+      _EDIT_POSTEDNOTCOLLECTED: // normal new RX
+        begin
+        actData_Delete.Enabled := False;
+        actData_Add.Enabled := False;
+        end;
+      end;//case
+
+    end else
+    begin
+    actData_Last.Enabled := False;
+    actData_Next.Enabled := False;
+    actData_First.Enabled := False;
+    actData_Prior.Enabled := False;
+    actData_Delete.Enabled := False;
+    actData_Post.Enabled := False;
+    actData_Cancel.Enabled := False;
+    actData_Add.Enabled := False;
+    actData_Refresh.Enabled := False;
+    end;
+
+end;
+
+procedure TfrmRX.SetScreenAvailablity(_type: Integer = _EDIT_NORMAL);
+begin
+
+  case _type of
+    _EDIT_NORMAL:
+      begin
+      // form header
+      rxClinic.Enabled := True;
+      rxNaive.Enabled := True;
+      rxPregnant.Enabled := True;
+      rxReferred.Enabled := True;
+      rxDemander.Enabled := True;
+      rxPrescriberCode.Enabled := True;
+      rxPrescriber.Enabled := True;
+      rxDispenser.Enabled := True;//FEnableDispenser;
+      rxDispenserCode.Enabled := True;// FEnableDispenser;
+      rxLocation.Enabled := True;
+
+      regICDCode.Enabled := True;
+      regICDDesc.Enabled := True;
+      regInterventionProblem.Enabled := True;
+      regInterventionOutcome.Enabled := True;
+      regBatchNumber.Enabled := True;
+      //regWithHeld.Enabled := True;
+
+      // Grid main
+      dxgRXItemStandard.OptionsDB := dxgRXItemStandard.OptionsDB + [edgoCanAppend, edgoCanDelete, edgoCanInsert];
+      dxgRXItemStandard.OptionsView := dxgRXItemStandard.OptionsView - [edgoRowSelect];
+
+      //Gridview
+      dxgRXItemStandardFrmFormulation_Str.TabStop := True;
+      dxgRXItemStandardFrmSKU_Dbl.TabStop := True;
+      dxgRXItemStandardFrmInterval_Str.TabStop := True;
+      dxgRXItemStandardFrmDuration_Dbl.TabStop := True;
+      dxgRXItemStandardFrmRepeat_Dbl.TabStop := True;
+      dxgRXItemStandardFrmDirections_Str.TabStop := True;
+      dxgRXItemStandardDspProduct_Str.TabStop := True;
+      dxgRXItemStandardDspSKUActual_Dbl.TabStop := True;
+      dxgRXItemStandardDspProductBreakPack_Bol.TabStop := True;
+
+      dxgRXItemStandardFrmFormulation_Str.DisableEditor := False;
+      dxgRXItemStandardFrmSKU_Dbl.DisableEditor := False;
+      dxgRXItemStandardFrmInterval_Str.DisableEditor := False;
+      dxgRXItemStandardFrmDuration_Dbl.DisableEditor := False;
+      dxgRXItemStandardFrmRepeat_Dbl.DisableEditor := False;
+      dxgRXItemStandardFrmDirections_Str.DisableEditor := False;
+      dxgRXItemStandardDspProduct_Str.DisableEditor := False;
+      dxgRXItemStandardDspSKUActual_Dbl.DisableEditor := False;
+      dxgRXItemStandardDspProductBreakPack_Bol.DisableEditor := False;
+      dxgRXItemStandardDspNotDispensed_Bol.DisableEditor := False;
+
+      // Card View
+      cxgLabelsCvlabel_Line03_str.Options.Editing := True;
+
+      // Actions
+      actRXItem_ChangeDirections.Enabled := True;
+      actRXItem_ChangeIntervention.Enabled := True;
+      actRX_Post.Enabled := True;
+      actRX_PostAndPrintAll.Enabled := True;
+      actRX_PostAndPrintLabel.Enabled := True;
+      actRX_PostAndCancel.Enabled := True;
+      actRX_PostAndCancelCollection.Enabled := False;
+      actRX_PostPrintLabelAndTrailerLabel.Enabled := True;
+
+      actRX_ProtocolAdd.Enabled := True;
+      actRX_StandardRegimen.Enabled := True;
+
+      end;
+
+    _EDIT_REPEAT:
+      begin
+      // form header
+      rxClinic.Enabled := True;
+      rxLocation.Enabled := True;
+      rxNaive.Enabled := False;
+      rxPregnant.Enabled := True;
+      rxReferred.Enabled := True;
+      rxDemander.Enabled := True;
+      rxPrescriberCode.Enabled := False;
+      rxPrescriber.Enabled := False;
+      rxDispenser.Enabled := True;//FEnableDispenser;
+      rxDispenserCode.Enabled := True;//FEnableDispenser;
+
+      regICDCode.Enabled := False;
+      regICDDesc.Enabled := False;
+      regInterventionProblem.Enabled := True;
+      regInterventionOutcome.Enabled := True;
+      regBatchNumber.Enabled := True;
+      //regWithHeld.Enabled := True;
+
+      // Grid main
+      dxgRXItemStandard.OptionsDB := dxgRXItemStandard.OptionsDB - [edgoCanAppend, edgoCanDelete, edgoCanInsert];
+      dxgRXItemStandard.OptionsView := dxgRXItemStandard.OptionsView - [edgoRowSelect];
+
+      //Gridview
+      dxgRXItemStandardFrmFormulation_Str.TabStop := False;
+      dxgRXItemStandardFrmSKU_Dbl.TabStop := False;
+      dxgRXItemStandardFrmInterval_Str.TabStop := False;
+      dxgRXItemStandardFrmDuration_Dbl.TabStop := False;
+      dxgRXItemStandardFrmRepeat_Dbl.TabStop := False;
+      dxgRXItemStandardFrmDirections_Str.TabStop := True;
+      dxgRXItemStandardDspProduct_Str.TabStop := True;
+      dxgRXItemStandardDspSKUActual_Dbl.TabStop := True;
+      dxgRXItemStandardDspProductBreakPack_Bol.TabStop := True;
+
+      dxgRXItemStandardFrmFormulation_Str.DisableEditor := True;
+      dxgRXItemStandardFrmSKU_Dbl.DisableEditor := True;
+      dxgRXItemStandardFrmInterval_Str.DisableEditor := True;
+      dxgRXItemStandardFrmDuration_Dbl.DisableEditor := True;
+      dxgRXItemStandardFrmRepeat_Dbl.DisableEditor := True;
+      dxgRXItemStandardFrmDirections_Str.DisableEditor := False;
+      dxgRXItemStandardDspProduct_Str.DisableEditor := False;
+      dxgRXItemStandardDspSKUActual_Dbl.DisableEditor := False;
+      dxgRXItemStandardDspProductBreakPack_Bol.DisableEditor := False;
+      dxgRXItemStandardDspNotDispensed_Bol.DisableEditor := False;
+
+      // Card View
+      cxgLabelsCvlabel_Line03_str.Options.Editing := True;
+
+      // Actions
+      actRXItem_ChangeDirections.Enabled := True;
+      actRXItem_ChangeIntervention.Enabled := True;
+      actRX_Post.Enabled := True;
+      actRX_PostAndCancel.Enabled := True;
+      actRX_PostAndPrintAll.Enabled := True;
+      actRX_PostAndPrintLabel.Enabled := True;
+      actRX_PostAndCancelCollection.Enabled := False;
+      actRX_PostPrintLabelAndTrailerLabel.Enabled := True;
+
+      actRX_ProtocolAdd.Enabled := False;
+      actRX_StandardRegimen.Enabled := False;
+
+      end;
+
+    _EDIT_POSTEDCOLLECTED:
+      begin
+      // form header
+      rxClinic.Enabled := False;
+      rxLocation.Enabled := False;
+      rxNaive.Enabled := False;
+      rxPregnant.Enabled := False;
+      rxReferred.Enabled := False;
+      rxDemander.Enabled := False;
+      rxPrescriberCode.Enabled := False;
+      rxPrescriber.Enabled := False;
+      rxDispenser.Enabled := False;
+      rxDispenserCode.Enabled := False;
+
+      regICDCode.Enabled := False;
+      regICDDesc.Enabled := False;
+      regInterventionProblem.Enabled := False;
+      regInterventionOutcome.Enabled := False;
+      regBatchNumber.Enabled := False;
+      //regWithHeld.Enabled := False;
+
+      // Grid main
+      dxgRXItemStandard.OptionsView := dxgRXItemStandard.OptionsView + [edgoRowSelect];
+
+      // Card View
+      cxgLabelsCvlabel_Line03_str.Options.Editing := False;
+
+      // Actions
+      actRXItem_ChangeDirections.Enabled := False;
+      actRXItem_ChangeIntervention.Enabled := False;
+      actRX_Post.Enabled := False;
+      actRX_PostAndPrintAll.Enabled := False;
+      actRX_PostAndPrintLabel.Enabled := False;
+      actRX_PostAndCancel.Enabled := False;
+      actRX_PostAndCancelCollection.Enabled := True;
+      actRX_ProtocolAdd.Enabled := False;
+      actRX_StandardRegimen.Enabled := False;
+      actRX_PostPrintLabelAndTrailerLabel.Enabled := False;
+
+      end;
+
+    _EDIT_POSTEDNOTCOLLECTED:
+      begin
+      // form header
+      rxClinic.Enabled := False;
+      rxLocation.Enabled := False;       
+      rxNaive.Enabled := False;
+      rxPregnant.Enabled := False;
+      rxReferred.Enabled := False;
+      rxDemander.Enabled := False;
+      rxPrescriberCode.Enabled := False;
+      rxPrescriber.Enabled := False;
+      rxDispenser.Enabled := False;
+      rxDispenserCode.Enabled := False;
+
+      regICDCode.Enabled := False;
+      regICDDesc.Enabled := False;
+      regInterventionProblem.Enabled := False;
+      regInterventionOutcome.Enabled := False;
+      regBatchNumber.Enabled := True;
+      //regWithHeld.Enabled := True;
+
+      // Grid main
+      dxgRXItemStandard.OptionsDB := dxgRXItemStandard.OptionsDB - [edgoCanAppend, edgoCanDelete, edgoCanInsert];
+      dxgRXItemStandard.OptionsView := dxgRXItemStandard.OptionsView - [edgoRowSelect];
+
+      //Gridview
+      dxgRXItemStandardFrmFormulation_Str.TabStop := False;
+      dxgRXItemStandardFrmSKU_Dbl.TabStop := False;
+      dxgRXItemStandardFrmInterval_Str.TabStop := False;
+      dxgRXItemStandardFrmDuration_Dbl.TabStop := False;
+      dxgRXItemStandardFrmRepeat_Dbl.TabStop := False;
+      dxgRXItemStandardFrmDirections_Str.TabStop := False;
+      dxgRXItemStandardDspProduct_Str.TabStop := False;
+      dxgRXItemStandardDspSKUActual_Dbl.TabStop := False;
+      dxgRXItemStandardDspProductBreakPack_Bol.TabStop := False;
+
+      dxgRXItemStandardFrmFormulation_Str.DisableEditor := True;
+      dxgRXItemStandardFrmSKU_Dbl.DisableEditor := True;
+      dxgRXItemStandardFrmInterval_Str.DisableEditor := True;
+      dxgRXItemStandardFrmDuration_Dbl.DisableEditor := True;
+      dxgRXItemStandardFrmRepeat_Dbl.DisableEditor := True;
+      dxgRXItemStandardFrmDirections_Str.DisableEditor := True;
+      dxgRXItemStandardDspProduct_Str.DisableEditor := True;
+      dxgRXItemStandardDspSKUActual_Dbl.DisableEditor := True;
+      dxgRXItemStandardDspProductBreakPack_Bol.DisableEditor := True;
+      dxgRXItemStandardDspNotDispensed_Bol.DisableEditor := True;
+
+      // Card View
+      cxgLabelsCvlabel_Line03_str.Options.Editing := True;
+
+      // Actions
+      actRXItem_ChangeDirections.Enabled := False;
+      actRXItem_ChangeIntervention.Enabled := False;
+      actRX_Post.Enabled := False;
+      actRX_PostAndPrintAll.Enabled := False;
+      actRX_PostAndPrintLabel.Enabled := False;
+      actRX_PostAndCancel.Enabled := False;
+      actRX_PostAndCancelCollection.Enabled := False;
+      actRX_ProtocolAdd.Enabled := False;
+      actRX_StandardRegimen.Enabled := False;
+      actRX_PostPrintLabelAndTrailerLabel.Enabled := False;
+
+      end;
+
+    end;//case
+
+
+
+
+end;
+
+procedure TfrmRX.actRX_ProtocolAddExecute(Sender: TObject);
+var
+  stdReg : TStdRegimen;
+  retStr : string;
+begin
+
+{
+  if dmRX.ItemRowEdited then
+    begin
+    ShowMessage('Please save or cancel the current item before proceeding.');
+    Exit;
+    end;
+
+  dmRX.AbortCurrentItemRowEditing;
+  }
+  stdReg := TStdRegimen.Create(dmRX.conRX.ConnectionString);
+
+  retStr  := stdReg.ProtocolListFromRX(dmRX.RXId);
+  if retStr <> '' then
+    begin
+    dmRX.UpdateRX(retStr);
+    //MessageDlg(retStr, mtwarning, [mbok],0);
+
+
+    end;// else MessageDlg(retStr, mtwarning, [mbok],0);
+
+//  stdReg.ProtocolListFromRX(dmRX.RXId);
+
+  stdReg.Free;
+
+end;
+
+procedure TfrmRX.actRX_StandardRegimenExecute(Sender: TObject);
+var
+  stdReg : TStdRegimen;
+  retStr : string;
+begin
+
+{
+  if dmRX.ItemRowEdited then
+    begin
+    ShowMessage('Please save or cancel the current item before proceeding.');
+    Exit;
+    end;
+
+  dmRX.AbortCurrentItemRowEditing;
+}
+
+  stdReg := TStdRegimen.Create(dmRX.conRX.ConnectionString);
+  retStr  := stdReg.RegimenListFromRX(dmRX.RXId);
+  if retStr <> '' then
+    begin
+    dmRX.UpdateRX(retStr);
+//    MessageDlg(retStr, mtwarning, [mbok],0);
+
+
+    end;// else MessageDlg(retStr, mtwarning, [mbok],0);
+
+  stdReg.Free;
+
+end;
+
+
+procedure TfrmRX.actRX_PostExecute(Sender: TObject);
+begin
+
+  dmRX.qryRX.Post;
+
+  if dmRX.qryRXItem.State in [dsEdit, dsInsert] then
+   dmRX.qryRXItem.Post;
+      
+  dmRX.Post;
+
+
+end;
+
+//MC  MANKGA 31/08/2010
+procedure TfrmRX.actRX_PostAndCancelExecute(Sender: TObject);
+const
+   PMSG = 'WARNING' + #13 +'Once you Cancel/Stop RX this record can no longer be edited.' + #13 + #13 + 'Continue to Cancel/Stop RX?';
+begin
+ if MessageDlg(PMSG , mtWarning, [mbYes, mbNo], 0) = mrYes then
+ begin
+  if dmRX.qryRXItem.State in [dsEdit, dsInsert] then dmRX.qryRXItem.Post;
+   dmRX.PostAndCancel;
+   end
+ else
+   Abort;
+end;
+
+procedure TfrmRX.actRX_PostAndCancelCollectionExecute(Sender: TObject);
+begin
+
+  if dmRX.qryRXItem.State in [dsEdit, dsInsert] then
+   dmRX.qryRXItem.Post;
+
+
+  if MessageDlg('Rx not collected - Cancel and remove stock?' + #13 + 'This cannot be reversed.', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    dmRX.PostAndCancelCollection;
+  
+end;
+
+procedure TfrmRX.pgcPrescriptionChange(Sender: TObject);
+begin
+
+{  if assigned(dmPatient) then
+    if assigned(dmRX) then
+      begin
+      dmPatient.Database := dmRX.DatabaseConString;
+      dmPatient.Patient := dmRX.PatientId;
+      end;
+ }
+end;
+
+procedure TfrmRX.actRX_PostAndPrintAllExecute(Sender: TObject);
+begin
+
+  if dmRX.qryRXItem.State in [dsEdit, dsInsert] then
+   dmRX.qryRXItem.Post;
+   
+  if dmRX.Post then
+    begin
+    dmRX.Print(False);
+    dmRX.PrintLabels(False);
+    dmRX.PrintAddress(False);
+ //   dmRX.PrintTrailerLabels(False);
+    end;
+
+end;
+
+procedure TfrmRX.actRX_PostAndPrintLabelExecute(Sender: TObject);
+begin
+  if dmRX.qryRXItem.State in [dsEdit, dsInsert] then
+   dmRX.qryRXItem.Post;
+   
+  if dmRX.Post then
+    dmRX.PrintLabels(False);
+end;
+
+procedure TfrmRX.actRX_PostPrintLabelAndTrailerLabelExecute(Sender: TObject);
+begin
+
+  if dmRX.qryRXItem.State in [dsEdit, dsInsert] then
+   dmRX.qryRXItem.Post;
+
+  if dmRX.Post then
+    begin
+    dmRX.PrintLabels(False);
+    dmRX.PrintTrailerLabels;
+    end;
+end;
+
+procedure TfrmRX.actRX_PrintTrailerLabelExecute(Sender: TObject);
+begin
+   if dmRX.qryRXItem.State in [dsEdit, dsInsert] then
+   dmRX.qryRXItem.Post;
+ //  if dmRX.Post then
+    dmRX.PrintTrailerLabels;
+end;
+
+procedure TfrmRX.actRX_PrintAllergiesExecute(Sender: TObject);
+begin
+ dmRX.PrintAllergies;
+end;
+
+end.
