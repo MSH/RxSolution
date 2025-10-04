@@ -11,18 +11,24 @@ const
       CMDBFILE      = 'Access File';
       CSERVER       = 'Server';
       CDATABASE     = 'DB';
-      CDATABASEPHYSSICALFILENAME = 'DB Physical File Name';
       CDATABASEBACKUPPATH = 'DB Backup Path';
       CUSER         = 'User';
       CPASSWORD     = 'Password';
       CINTSECURITY  = 'SSPI';
       CTRUE         = '#@$5%SdvB';
       CFALSE        = '%^6gFrd@34';
+      CPORT         = 'Port';
+      CDRIVER       = 'Driver';
+      CLEGACYDATABASEPHYSICALNAME = 'DB Physical File Name';
       DBFOLDER      = 'Data';
       DBBACKEXT     = '_DB.dat';
       DBBACKLOGEXT  = '_DBLog.dat';
       DBBACK        = '_DB';
       DBBACKLOG     = '_DBLog';
+
+      DEFAULT_MYSQL_DRIVER = 'MySQL ODBC 8.0 ANSI Driver';
+      DEFAULT_MYSQL_PORT   = 3306;
+      DEFAULT_ODBC_OPTIONS = 'Option=3';
 
 type
 
@@ -71,18 +77,23 @@ type
   TSQLConnection = class(TConnection)
   private
     FconnectionReady: Boolean;
-    FServer, FDatabase, FDatabasePhysicalFileName, FDatabaseBackupPath: string;
+    FServer, FDatabase, FDatabaseBackupPath: string;
     FuseIntegratedSecurity: Boolean;
+    FPort: Word;
+    FDriver: string;
+    FWarnedIntegratedSecurity: Boolean;
     function Getdatabase: string;
     function Getserver: string;
     function GetuseIntegratedSecurity: Boolean;
     procedure Setdatabase(const Value: string);
     procedure Setserver(const Value: string);
     procedure SetuseIntegratedSecurity(Value: Boolean);
-    function GetdatabasePhysicalFileName: string;
-    procedure SetdatabasePhysicalFileName(const Value: string);
     function GetdatabaseBackupPath: string;
     procedure SetdatabaseBackupPath(const Value: string);
+    function Getport: Word;
+    procedure Setport(const Value: Word);
+    function Getdriver: string;
+    procedure Setdriver(const Value: string);
   public
     constructor Create; override;
     function BuildConnectionString: string; override;
@@ -95,12 +106,12 @@ type
     property connectionReady: Boolean read FconnectionReady;
     property database: string read Getdatabase write Setdatabase;
     property server: string read Getserver write Setserver;
-    property useIntegratedSecurity: Boolean read GetuseIntegratedSecurity write 
+    property useIntegratedSecurity: Boolean read GetuseIntegratedSecurity write
         SetuseIntegratedSecurity;
-    property databasePhysicalFileName: string read GetdatabasePhysicalFileName 
-        write SetdatabasePhysicalFileName;
-    property databaseBackupPath: string read GetdatabaseBackupPath write 
+    property databaseBackupPath: string read GetdatabaseBackupPath write
         SetdatabaseBackupPath;
+    property port: Word read Getport write Setport;
+    property driver: string read Getdriver write Setdriver;
   end;
 
   TOracleConnection = class(TConnection)
@@ -555,8 +566,12 @@ begin (*.............................................................*)(*begin*)
 
   try
   inherited Create;
-  OLEDBProvider := 'SQLOLEDB.1';
+  OLEDBProvider := 'MSDASQL.1';
   FconnectionReady := False;
+  FPort := DEFAULT_MYSQL_PORT;
+  FDriver := DEFAULT_MYSQL_DRIVER;
+  FuseIntegratedSecurity := False;
+  FWarnedIntegratedSecurity := False;
   except
     on E:Exception do MessageDlg(e.Message, mtError, [mbOK], 0);
   end;
@@ -569,13 +584,8 @@ function TSQLConnection.BuildConnectionString: string; (*:::::::::::::::START:*)
                                                                                 (*===========================================*)
                                                                    (*14.9.2003*)(* Orig::Deane Putzier                       *)
 var (*.................................................................*)(*var*)(*...........................................*)
-  RetStr :string;
-  vPassword, vUsername, vDatabase, vServer :string;
-
-const                                                                  (*const*)(*...........................................*)
-  CONNSTR_0 = 'Provider=%s;Persist Security Info=False;User ID=%s;Initial Catalog=%s;Data Source=%s';
-  CONNSTR_1 = 'Provider=%s;Persist Security Info=False;Password=%s; User ID=%s;Initial Catalog=%s;Data Source=%s';
-  CONNSTR_2 = 'Provider=%s;Integrated Security=%s;Persist Security Info=False;Initial Catalog=%s;Data Source=%s';
+  RetStr, vPassword, vUsername, vDatabase, vServer, vDriver: string;
+  vPort: Word;
 
 begin (*.............................................................*)(*begin*)(*...........................................*)
 
@@ -587,14 +597,32 @@ begin (*.............................................................*)(*begin*)
   vUsername := GetUsername;
   vDatabase := GetDatabase;
   vServer   := GetServer;
+  vDriver   := Getdriver;
+  vPort     := Getport;
 
-  if GetuseIntegratedSecurity then
-    RetStr := Format(CONNSTR_2, [OLEDBProvider, 'SSPI', vDatabase, vServer])
-    else
-    if GetPassword <> '' then
-      RetStr := Format(CONNSTR_1, [OLEDBProvider, vPassword, vUsername, vDatabase, vServer])
-      else
-      RetStr := Format(CONNSTR_0, [OLEDBProvider, vUsername, vDatabase, vServer]);
+  GetuseIntegratedSecurity;
+
+  if Trim(vDriver) = '' then vDriver := DEFAULT_MYSQL_DRIVER;
+  if vPort = 0 then vPort := DEFAULT_MYSQL_PORT;
+
+  RetStr := Format('Provider=%s;Persist Security Info=False;Driver={%s};Server=%s;Port=%d',
+    [OLEDBProvider, vDriver, vServer, vPort]);
+
+  if vDatabase <> '' then
+    RetStr := RetStr + Format(';Database=%s', [vDatabase]);
+
+  if vUsername <> '' then
+    RetStr := RetStr + Format(';User=%s', [vUsername]);
+
+  if vPassword <> '' then
+    RetStr := RetStr + Format(';Password=%s', [vPassword]);
+
+  if Pos('Option=', AnsiUpperCase(RetStr)) = 0 then
+    RetStr := RetStr + Format(';%s', [DEFAULT_ODBC_OPTIONS]);
+
+  if RetStr[Length(RetStr)] <> ';' then
+    RetStr := RetStr + ';';
+
   Result := RetStr;
   FConnection.ConnectionString := Result;
   except
@@ -622,8 +650,8 @@ try
     MyConn.Database := GetDatabase;
     MyConn.UserName := GetUsername;
     MyConn.Password := GetPassword;
-    MyConn.integratedSecurity := GetuseIntegratedSecurity;
-    MyConn.PhysicalFileName := GetdatabasePhysicalFileName;
+    MyConn.integratedSecurity := False;
+    MyConn.Port := IntToStr(Getport);
     MyConn.BackupPath := GetdatabaseBackupPath;
 
     if MyConn.Connect(etSQL) then
@@ -631,7 +659,7 @@ try
       SetServer(MyConn.Server);
       SetDatabase(MyConn.Database);
       SetuseIntegratedSecurity(MyConn.integratedSecurity);
-      SetdatabasePhysicalFileName(MyConn.PhysicalFileName);
+      Setport(StrToIntDef(MyConn.Port, DEFAULT_MYSQL_PORT));
       SetdatabaseBackupPath(MyConn.BackupPath);
 
       // Changed Deane 2006- feb  Cleared values for user and password if using intergrated security
@@ -696,7 +724,16 @@ try
     begin
     RetVal := ReadStringFromRegistry(CINTSECURITY, True);
     if RetVal = CTRUE then
-      FuseIntegratedSecurity := True
+      begin
+      FuseIntegratedSecurity := False;
+      if not FWarnedIntegratedSecurity then
+        begin
+        MessageDlg('Integrated security is not supported for MySQL connections. '
+          + 'Credentials will be required instead.', mtWarning, [mbOK], 0);
+        FWarnedIntegratedSecurity := True;
+        end;
+      SaveStringToRegistry(CINTSECURITY, CFALSE, True);
+      end
       else
       FuseIntegratedSecurity := False;
     end;
@@ -733,7 +770,7 @@ begin (*.............................................................*)(*begin*)
 try
   FServer := Value;
   if FsaveToRegistry then SaveStringToRegistry(CSERVER, Value, False);
-//  BuildConnectionString;
+  BuildConnectionString;
 except
   on E:Exception do MessageDlg(e.Message, mtError, [mbOK], 0);
 end;
@@ -749,12 +786,13 @@ procedure TSQLConnection.SetuseIntegratedSecurity(Value: Boolean);
 begin
 
 try
-  FuseIntegratedSecurity := Value;
+  if Value then
+    FuseIntegratedSecurity := False
+    else
+    FuseIntegratedSecurity := False;
+
   if FsaveToRegistry then
-    if Value then
-      SaveStringToRegistry(CINTSECURITY, CTRUE, True)
-      else
-      SaveStringToRegistry(CINTSECURITY, CFALSE, True);
+    SaveStringToRegistry(CINTSECURITY, CFALSE, True);
 
   BuildConnectionString;
 except
@@ -782,57 +820,13 @@ end; (*................................................................*)(*end*)
 
 
 function TSQLConnection.Database_Backup: string;
-const
-  SQL_BD = 'USE Master EXEC sp_addumpdevice ''disk'', ''%s'',''%s''';
-  SQL_BK = 'BACKUP DATABASE %s TO %s';
-  SQL_BL = 'BACKUP LOG %s TO %s';
-
-
-var
-  SQL_E     :TADOCommand;
-  dbName, dbPath    :string;
-
 begin
 
-try
-  result := '';
-  SQL_E := TADOCommand.Create(Application);
-  with SQL_E do
-    try
-    dbName := Getdatabase;
-    dbPath := GetdatabaseBackupPath;
-    if not DirectoryExists(dbPath) then
-      if  not CreateDir(dbPath) then
-        raise Exception.Create('Cannot create ' + dbPath);
+  Result := '';
+  MessageDlg('Automated backup routines are not supported for MySQL connections. '
+    + 'Please use mysqldump or your preferred MySQL backup utility.',
+    mtInformation, [mbOK], 0);
 
-    SQL_E.ConnectionString := BuildConnectionString_WithoutDB;
-    CommandText := Format(SQL_BD, [dbName + DBBACK, dbPath + dbName + DBBACKEXT]);
-    Execute;
-    CommandText := Format(SQL_BD, [dbName + DBBACKLOG, dbPath + dbName + DBBACKLOGEXT]);
-    Execute;
-    CommandText := Format(SQL_BK, [dbName, dbName + DBBACK]);
-    Execute;
-    CommandText := Format(SQL_BL, [dbName, dbName + DBBACKLOG]);
-    Execute;
-    finally
-    end;
-except
-  on E:Exception do MessageDlg(e.Message, mtError, [mbOK], 0);
-end;
-
-end;
-
-function TSQLConnection.GetdatabasePhysicalFileName: string;
-begin
-  if FsaveToRegistry then FDatabasePhysicalFileName := ReadStringFromRegistry(CDATABASEPHYSSICALFILENAME, False);
-  Result := FDatabasePhysicalFileName;
-end;
-
-
-procedure TSQLConnection.SetdatabasePhysicalFileName(const Value: string);
-begin
-  FDatabasePhysicalFileName := Value;
-  if FsaveToRegistry then SaveStringToRegistry(CDATABASEPHYSSICALFILENAME, Value, False);
 end;
 
 function TSQLConnection.GetdatabaseBackupPath: string;
@@ -847,19 +841,86 @@ begin
   if FsaveToRegistry then SaveStringToRegistry(CDATABASEBACKUPPATH, Value, False);
 end;
 
+function TSQLConnection.Getport: Word;
+var
+  PortValue: string;
+begin
+  if FsaveToRegistry then
+    begin
+    PortValue := ReadStringFromRegistry(CPORT, False);
+    if PortValue = '' then
+      PortValue := ReadStringFromRegistry(CLEGACYDATABASEPHYSICALNAME, False);
+    if PortValue <> '' then
+      FPort := StrToIntDef(PortValue, DEFAULT_MYSQL_PORT);
+    end;
+
+  if FPort = 0 then
+    FPort := DEFAULT_MYSQL_PORT;
+
+  Result := FPort;
+end;
+
+procedure TSQLConnection.Setport(const Value: Word);
+var
+  StoredValue: string;
+begin
+  if Value = 0 then
+    FPort := DEFAULT_MYSQL_PORT
+    else
+    FPort := Value;
+
+  if FsaveToRegistry then
+    begin
+    StoredValue := IntToStr(FPort);
+    SaveStringToRegistry(CPORT, StoredValue, False);
+    end;
+
+  BuildConnectionString;
+end;
+
+function TSQLConnection.Getdriver: string;
+begin
+  if FsaveToRegistry then
+    begin
+    FDriver := ReadStringFromRegistry(CDRIVER, False);
+    if FDriver = '' then
+      FDriver := ReadStringFromRegistry(CLEGACYDATABASEPHYSICALNAME, False);
+    end;
+
+  if Trim(FDriver) = '' then
+    FDriver := DEFAULT_MYSQL_DRIVER;
+
+  if Length(FDriver) > 1 then
+    if (FDriver[1] = '{') and (FDriver[Length(FDriver)] = '}') then
+      FDriver := Copy(FDriver, 2, Length(FDriver) - 2);
+
+  Result := FDriver;
+end;
+
+procedure TSQLConnection.Setdriver(const Value: string);
+begin
+  FDriver := Trim(Value);
+  if FDriver = '' then
+    FDriver := DEFAULT_MYSQL_DRIVER;
+
+  if Length(FDriver) > 1 then
+    if (FDriver[1] = '{') and (FDriver[Length(FDriver)] = '}') then
+      FDriver := Copy(FDriver, 2, Length(FDriver) - 2);
+
+  if FsaveToRegistry then
+    SaveStringToRegistry(CDRIVER, FDriver, False);
+
+  BuildConnectionString;
+end;
+
 
 function TSQLConnection.BuildConnectionString_WithoutDB: string;
                                                                                 (*function:BuildConnectionString-------------*)
                                                                                 (*===========================================*)
                                                                    (*14.9.2003*)(* Orig::Deane Putzier                       *)
 var (*.................................................................*)(*var*)(*...........................................*)
-  RetStr :string;
-  vPassword, vUsername, vServer :string;
-
-const                                                                  (*const*)(*...........................................*)
-  CONNSTR_0 = 'Provider=%s;Persist Security Info=False;User ID=%s;Data Source=%s';
-  CONNSTR_1 = 'Provider=%s;Persist Security Info=False;Password=%s; User ID=%s;Data Source=%s';
-  CONNSTR_2 = 'Provider=%s;Integrated Security=%s;Persist Security Info=False;Data Source=%s';
+  RetStr, vPassword, vUsername, vServer, vDriver: string;
+  vPort: Word;
 
 begin (*.............................................................*)(*begin*)(*...........................................*)
 
@@ -870,14 +931,29 @@ try
   vPassword := GetPassword;
   vUsername := GetUsername;
   vServer   := GetServer;
+  vDriver   := Getdriver;
+  vPort     := Getport;
 
-  if GetuseIntegratedSecurity then
-    RetStr := Format(CONNSTR_2, [OLEDBProvider, 'SSPI', vServer])
-    else
-    if GetPassword <> '' then
-      RetStr := Format(CONNSTR_1, [OLEDBProvider, vPassword, vUsername, vServer])
-      else
-      RetStr := Format(CONNSTR_0, [OLEDBProvider, vUsername, vServer]);
+  GetuseIntegratedSecurity;
+
+  if Trim(vDriver) = '' then vDriver := DEFAULT_MYSQL_DRIVER;
+  if vPort = 0 then vPort := DEFAULT_MYSQL_PORT;
+
+  RetStr := Format('Provider=%s;Persist Security Info=False;Driver={%s};Server=%s;Port=%d',
+    [OLEDBProvider, vDriver, vServer, vPort]);
+
+  if vUsername <> '' then
+    RetStr := RetStr + Format(';User=%s', [vUsername]);
+
+  if vPassword <> '' then
+    RetStr := RetStr + Format(';Password=%s', [vPassword]);
+
+  if Pos('Option=', AnsiUpperCase(RetStr)) = 0 then
+    RetStr := RetStr + Format(';%s', [DEFAULT_ODBC_OPTIONS]);
+
+  if RetStr[Length(RetStr)] <> ';' then
+    RetStr := RetStr + ';';
+
   Result := RetStr;
 except
   on E:Exception do MessageDlg(e.Message, mtError, [mbOK], 0);
@@ -886,70 +962,12 @@ end;
 end; (*................................................................*)(*end*)(*...........................................*)
 
 function TSQLConnection.Database_Attach(FileName :string = ''): string;
-const
-  SQL_ATT = 'EXEC sp_attach_single_file_db @dbname = ''%s'', @physname = ''%s''';
-
-var
-  SQL_E     :TADOCommand;
-  dbName, dbPath    :string;
-  MyConn :TSetConnection;
-  StillProcess :boolean;
-
 begin (*.............................................................*)(*begin*)(*...........................................*)
 
-try
-  MyConn := TSetConnection.Create;
-  StillProcess := True;
-  Result := '-1';
-  SQL_E := TADOCommand.Create(Application);
-  with SQL_E do
-    try
-
-    if FileName = '' then
-      begin
-      with MyConn do
-        try
-        MyConn.Server := GetServer;
-        MyConn.Database := GetDatabase;
-        MyConn.UserName := GetUsername;
-        MyConn.Password := GetPassword;
-        MyConn.integratedSecurity := GetuseIntegratedSecurity;
-        MyConn.PhysicalFileName := GetdatabasePhysicalFileName;
-        MyConn.BackupPath := GetdatabaseBackupPath;
-        if MyConn.Connect(etSQL) then
-          begin
-          SetServer(MyConn.Server);
-          SetDatabase(MyConn.Database);
-          SetUsername(MyConn.UserName);
-          SetPassword(MyConn.Password);
-          SetdatabasePhysicalFileName(MyConn.PhysicalFileName);
-          SetdatabaseBackupPath(MyConn.BackupPath);
-          SetuseIntegratedSecurity(MyConn.integratedSecurity);
-          end else
-          StillProcess := False;
-        finally
-        Free;
-        end;
-      dbPath := GetdatabasePhysicalFileName;
-      end
-      else
-      dbPath := FileName;
-
-    if StillProcess then
-      begin
-      dbName := Getdatabase;
-      SQL_E.ConnectionString := BuildConnectionString_WithoutDB;
-      CommandText := Format(SQL_ATT, [dbName, dbPath]);
-      Execute;
-      OpenDatasets;
-      Result := '';
-      end;
-
-    finally
-    end;
-except
-  on E:Exception do MessageDlg(e.Message, mtError, [mbOK], 0);
-end;
+  Result := '';
+  MessageDlg('Automatic database attach operations are not supported for MySQL '
+    + 'connections. Restore the database using native MySQL tooling.',
+    mtInformation, [mbOK], 0);
 
 end;
 

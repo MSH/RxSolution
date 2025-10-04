@@ -58,7 +58,7 @@ type
     FPassword: string;
     FFileName: string;
     FintegratedSecurity: Boolean;
-    FPhysicalFileName: string;
+    FPort: string;
     FBackupPath: string;
   public
     function Connect(Value:EEditFormType): Boolean;
@@ -69,8 +69,7 @@ type
     property FileName: string read FFileName write FFileName;
     property integratedSecurity: Boolean read FintegratedSecurity write
         FintegratedSecurity;
-    property PhysicalFileName: string read FPhysicalFileName write
-        FPhysicalFileName;
+    property Port: string read FPort write FPort;
     property BackupPath: string read FBackupPath write FBackupPath;
   end;
 
@@ -89,16 +88,23 @@ begin
   frmConnections := TfrmConnections.Create(Application);
   with frmConnections do
     try
+    Label8.Caption      := 'Port';
+    Label9.Visible      := False;
+    rzlBackupPath.Visible := False;
+    Button2.Visible     := False;
+    chbIntegratedSecurity.Visible := False;
+    chbIntegratedSecurity.Checked := False;
+    DisplayEditOptions;
     editFormType := Value;
     case Value of
       etSQL : begin
+              if Trim(FPort) = '' then
+                FPort := '3306';
               rzlServer.Text        := FServer;
               rzlDatabase.Text      := FDatabase;
               rzlUsername.Text      := FUsername;
               rzlPassword.Text      := FPassword;
-              rzlPhysicalFilename.Text := FPhysicalFileName;
-              rzlBackupPath.Text    := FBackupPath;
-              chbIntegratedSecurity.Checked := FIntegratedSecurity;
+              rzlPhysicalFilename.Text := FPort;
               end;
       etAccess : begin
 //              edtAccessFileName.Text  := FFileName;
@@ -117,9 +123,11 @@ begin
               FDatabase := rzlDatabase.Text;
               FUsername := rzlUsername.Text;
               FPassword := rzlPassword.Text;
-              FPhysicalFileName := rzlPhysicalFilename.Text;
-              FBackupPath := rzlBackupPath.Text;
-              FIntegratedSecurity := chbIntegratedSecurity.Checked;
+              FPort := rzlPhysicalFilename.Text;
+              if Trim(FPort) = '' then
+                FPort := '3306';
+              FBackupPath := '';
+              FIntegratedSecurity := False;
               end;
         etAccess : begin
 //              FFileName := edtAccessFileName.Text;

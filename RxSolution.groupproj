@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Projects Include="RxSolution.dproj">
+      <Dependencies />
+    </Projects>
+    <Projects Include="DispenserDLL.dproj">
+      <Dependencies />
+    </Projects>
+    <Projects Include="PrescriberDLL.dproj">
+      <Dependencies />
+    </Projects>
+    <Projects Include="PrintDLL.dproj">
+      <Dependencies />
+    </Projects>
+    <Projects Include="EvidenceDLL.dproj">
+      <Dependencies />
+    </Projects>
+    <Projects Include="Prescription.dproj">
+      <Dependencies />
+    </Projects>
+  </ItemGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality</Borland.Personality>
+    <Borland.ProjectType>ProjectGroup</Borland.ProjectType>
+    <BorlandProject>
+      <Default.Personality />
+    </BorlandProject>
+  </ProjectExtensions>
+</Project>
