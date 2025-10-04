@@ -9,4 +9,12 @@ The RxSolution software, documentation and other products, information, material
 
 Special note for developers: The source code was developed using Delphi 7 and Plugins. The QuantumGrid v3.22 is required but no longer available. This means that a manual conversion of tables from Tdx to Tcx has to be performed. Please follow the advise here from the plugin developers: https://www.devexpress.com/Support/Center/Question/Details/DQ13868/convert-from-tdxdbgrid-v3-to-the-new-v5
 
+## Modern IDE support
+
+The repository now includes MSBuild-compatible project files (`*.dproj` and `RxSolution.groupproj`) so the application and its auxiliary DLLs can be loaded directly in modern versions of Delphi / RAD Studio without relying on the legacy Borland project group format.
+
+## Database connectivity
+
+The legacy SQL Server specific connection logic has been replaced with a MySQL implementation that relies on the MySQL ODBC driver via ADO. Provide the server, database, user name, password, and optional port when prompted inside the application. Automated SQL Server backup and attach commands have been removed; use MySQL-native tooling for those operations.
+
 Copyright Management Sciences for Health.
